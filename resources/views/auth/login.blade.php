@@ -50,21 +50,13 @@
                 <div class="form-container">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
+                        
                         <div class="form-header">
                             <h1>Connexion</h1>
                             <p>Accédez à votre espace sécurisé</p>
                         </div>
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                        
 
                         <!-- Sélecteur de rôle -->
                         <div class="role-selector" id="login-role-selector">
@@ -78,9 +70,11 @@
                             </div>
                         </div>
                         
-                        <!-- Champ caché pour stocker le rôle -->
-                        <input type="hidden" name="role" id="login-role-input" value="patient">
-
+                        @if(session('error'))
+                            <div class="alert alert-danger" style="color: red; margin-bottom: 20px;">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="input-group">
                             <i class="fas fa-envelope"></i>
                             <input id="email" type="email" name="email" placeholder="Adresse email" required autofocus value="{{ old('email') }}">
@@ -105,10 +99,12 @@
 
                         <div class="divider">ou continuer avec</div>
 
-                        <button type="button" class="google-btn">
-                            <i class="fab fa-google"></i>
-                            Se connecter avec Google
-                        </button>
+                        <a href="{{ route('google.login') }}">
+                            <button type="button" class="google-btn">
+                                <i class="fab fa-google"></i>
+                                Se connecter avec Google
+                            </button>
+                        </a>
 
                         <div class="signup-link">
                             Vous n'avez pas de compte ? 

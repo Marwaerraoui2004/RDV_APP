@@ -8,6 +8,7 @@
     <title>{{ config('app.name', 'MediConnect') }}</title>
 
     <!-- Styles -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -64,11 +65,16 @@
             margin: auto;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
             border-radius: 20px;
-            overflow: hidden;
+            overflow: hidden; /* déjà présent, bien */
             z-index: 10;
             position: relative;
             background: white;
+
+            max-height: 100vh; /* limite la hauteur au viewport */
+            overflow-y: hidden; /* interdit le scroll vertical ici */
+            overflow-x: hidden; /* interdit scroll horizontal */
         }
+
         
         .logo {
             position: absolute;
@@ -220,8 +226,7 @@
             position: relative;
             overflow: hidden;
             height: 100%;
-            /* Correction: Ajout de défilement pour les grands écrans */
-            overflow-y: auto;
+            
         }
         
         /* Correction: Ajout d'un défilement spécifique pour les écrans mobiles */
@@ -243,17 +248,25 @@
             z-index: 0;
         }
         
-        .form-container {
-            width: 100%;
-            max-width: 480px;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(13, 74, 117, 0.12);
-            position: relative;
-            overflow: visible; /* Correction: Permet au contenu de déborder */
-            z-index: 2;
-        }
+       .form-container {
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh; /* Limite à 90% de la hauteur de l'écran */
+        overflow-y: auto;  /* Active la barre de défilement */
+        padding: 2rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(13, 74, 117, 0.12);
+        position: relative;
+        z-index: 2;
+        scroll-behavior: smooth;
+          /* Pour cacher la scrollbar dans la plupart des navigateurs */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE 10+ */
+    }
+        .form-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+            }
         
         .form-container::after {
             content: "";
@@ -726,7 +739,57 @@
                     });
                 });
             });
-            
+            const clientId = "320278544255-c8ma84e5qbbhvf5vsd7s3epgq7r0o638.apps.googleusercontent.com";  // Mets ici ton client ID Google
+
+            const googleBtn = document.getElementById('googleBtn');
+
+            googleBtn.addEventListener('click', () => {
+                google.accounts.id.initialize({
+                client_id: clientId,
+                callback: handleCredentialResponse
+                });
+                google.accounts.id.prompt(); 
+            });
+
+            function handleCredentialResponse(response) {
+                const token = response.credential;
+
+                fetch('/login/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({
+                     credential: response.credential,
+                })
+                })
+                .then(res => res.json())
+                .then(data => {
+                if(data.success){
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Erreur de connexion Google');
+                }
+                })
+                .catch(err => {
+                console.error('Erreur fetch:', err);
+                });
+            }
+
+            window.onload = function () {
+                google.accounts.id.initialize({
+                client_id: 'TON_CLIENT_ID_GOOGLE',
+                callback: handleCredentialResponse
+                });
+
+                // On n'appelle pas renderButton, on gère manuellement
+
+                document.getElementById('customGoogleBtn').addEventListener('click', () => {
+                // Ceci lance le popup Google Sign-In
+                google.accounts.id.prompt();
+                });
+            }
             // Animation pour les interactions
             const inputs = document.querySelectorAll('input, select');
             inputs.forEach(input => {
@@ -761,5 +824,7 @@
             });
         });
     </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </body>
 </html>
