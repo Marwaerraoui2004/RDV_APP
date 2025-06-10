@@ -22,33 +22,39 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request): RedirectResponse
+   public function store(Request $request): RedirectResponse
 {
-        $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+    // Validation des champs email et password
+    $request->validate([
+        'email' => ['required', 'string', 'email'],
+        'password' => ['required', 'string'],
+    ]);
 
-        if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            return back()->withErrors([
-                'email' => 'Les identifiants sont incorrects.',
-            ]);
-        }
-
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        // Redirection selon le rôle réel
-        if ($user->role === 'docteur') {
-            return redirect()->route('docteur.dashboard');
-        } elseif ($user->role === 'patient') {
-            return redirect()->route('patient.dashboard');
-        } else {
-            Auth::logout();
-            return redirect('/login')->withErrors(['role' => 'Rôle non reconnu.']);
-        }
+    // Tente d'authentifier l'utilisateur avec les infos + remember (checkbox)
+    // $request->boolean('remember') renvoie true si la checkbox est cochée
+    if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        return back()->withErrors([
+            'email' => 'Les identifiants sont incorrects.',
+        ])->withInput();  // garde les anciennes données dans le formulaire
     }
+
+    // Regénère la session pour éviter fixation de session
+    $request->session()->regenerate();
+
+    // Récupère l'utilisateur connecté
+    $user = Auth::user();
+
+    // Redirection selon le rôle
+    if ($user->role === 'docteur') {
+        return redirect()->route('docteur.dashboard');
+    } elseif ($user->role === 'patient') {
+        return redirect()->route('patient.dashboard');
+    } else {
+        Auth::logout();
+        return redirect('/login')->withErrors(['role' => 'Rôle non reconnu.']);
+    }
+}
+
 
 
     /**

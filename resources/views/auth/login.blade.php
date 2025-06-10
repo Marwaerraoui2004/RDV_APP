@@ -87,12 +87,11 @@
 
                         <div class="remember-forgot">
                             <div class="remember">
-                                <input id="remember_me" type="checkbox" name="remember">
+                                <input id="remember_me" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="remember_me">Se souvenir de moi</label>
                             </div>
-                            @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="forgot">Mot de passe oublié ?</a>
-                            @endif
+                        <a href="{{ route('password.reset.form') }}">Mot de passe oublié ?</a>
+                            
                         </div>
 
                         <button type="submit" class="login-btn">Se connecter</button>

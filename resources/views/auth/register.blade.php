@@ -71,7 +71,16 @@
                                 Médecin
                             </div>
                         </div>
-                        
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <!-- Champ caché pour stocker le rôle -->
                         <input type="hidden" name="role" id="register-role-input" value="patient">
                         
@@ -141,12 +150,17 @@
                             <i class="fas fa-lock"></i>
                             <input id="password" type="password" name="password" placeholder="Mot de passe" required autocomplete="new-password">
                         </div>
-                        
+                       
                         <div class="input-group">
                             <i class="fas fa-lock"></i>
                             <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirmer le mot de passe" required>
                         </div>
-                        
+                         <div class="input-group">
+                            <i class="fas fa-lock"></i>
+
+                            <input type="text" name="secret_code" placeholder="Code secret" required>
+
+                        </div>
                         <div class="remember">
                             <input type="checkbox" id="terms" name="terms" required>
                             <label for="terms">J'accepte les <a href="#" style="color: var(--accent);">conditions d'utilisation</a> et la <a href="#" style="color: var(--accent);">politique de confidentialité</a></label>
@@ -154,12 +168,6 @@
                         
                         <button type="submit" class="login-btn">S'inscrire</button>
                         
-                        <div class="divider">ou continuer avec</div>
-                        
-                        <button type="button" class="google-btn">
-                            <i class="fab fa-google"></i>
-                            S'inscrire avec Google
-                        </button>
                     </form>
                 </div>
             </div>

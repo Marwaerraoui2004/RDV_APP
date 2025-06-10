@@ -27,7 +27,8 @@ class User extends Authenticatable
         'specialty',
         'address',
         'city',
-        'postal_code'
+        'postal_code',
+        'secret_code',
     ];
 
     /**
