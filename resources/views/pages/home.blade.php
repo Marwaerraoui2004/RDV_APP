@@ -669,9 +669,9 @@
             <h1>MediConnect</h1>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-login">Connexion</button>
-            <button class="btn btn-register">Inscription</button>
-        </div>
+            <a href="/login" class="btn btn-login">Connexion</a>
+            <a href="/register" class="btn btn-register">Inscription</a>
+        </div>
     </header>
 
     <!-- Hero Section -->
