@@ -669,9 +669,10 @@
             <h1>MediConnect</h1>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-login">Connexion</button>
-            <button class="btn btn-register">Inscription</button>
+            <a href="{{ route('login') }}" class="btn btn-login">Connexion</a>
+            <a  href="{{ route('register') }}" class="btn btn-register">Inscription</a>
         </div>
+
     </header>
 
     <!-- Hero Section -->
@@ -712,7 +713,7 @@
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
-                    <i class="fas fa-comments-medical"></i>
+                    <i class="fas fa-envelope"></i>
                 </div>
                 <h3>Messagerie médicale</h3>
                 <p>Échangez en toute confidentialité avec vos professionnels de santé.</p>
