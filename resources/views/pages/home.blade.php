@@ -669,10 +669,9 @@
             <h1>MediConnect</h1>
         </div>
         <div class="nav-buttons">
-            <a href="{{ route('login') }}" class="btn btn-login">Connexion</a>
-            <a  href="{{ route('register') }}" class="btn btn-register">Inscription</a>
+            <button class="btn btn-login">Connexion</button>
+            <button class="btn btn-register">Inscription</button>
         </div>
-
     </header>
 
     <!-- Hero Section -->
