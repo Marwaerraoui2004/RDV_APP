@@ -196,6 +196,7 @@
             flex: 1;
             margin-left: 280px;
             padding: 2rem;
+            position: relative;
         }
 
         /* Header */
@@ -206,6 +207,7 @@
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
         }
 
         .header-title h2 {
@@ -224,6 +226,7 @@
             display: flex;
             align-items: center;
             gap: 1.2rem;
+            position: relative;
         }
 
         .search-box {
@@ -264,6 +267,7 @@
             box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: var(--transition);
+            position: relative;
         }
 
         .user-profile:hover {
@@ -294,22 +298,36 @@
             color: var(--text-light);
         }
 
+        /* MODIFICATIONS POUR LE DROPDOWN */
+        .user-profile-container {
+            position: relative;
+        }
+        
         .dropdown-menu {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 15px);
             right: 0;
             background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             padding: 15px;
-            width: 200px;
-            z-index: 9999;;
+            width: 220px;
+            z-index: 10000; /* Très élevé pour être au-dessus de tout */
             display: none;
-            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .dropdown-menu a {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 10px 15px;
             color: var(--text-dark);
             text-decoration: none;
@@ -321,6 +339,12 @@
         .dropdown-menu a:hover {
             background: rgba(58, 134, 255, 0.1);
             color: var(--primary);
+        }
+        
+        .dropdown-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
         }
 
         .btn-logout {
@@ -334,6 +358,10 @@
             font-weight: 600;
             transition: var(--transition);
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-logout:hover {
@@ -357,7 +385,6 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            z-index: -1;
         }
 
         .stat-card::before {
@@ -368,7 +395,6 @@
             width: 6px;
             height: 100%;
             background: linear-gradient(to bottom, var(--primary), var(--accent));
-            z-index: -1;
         }
 
         .stat-card:hover {
@@ -439,7 +465,6 @@
             overflow: hidden;
             transition: var(--transition);
             position: relative;
-            z-index: -1;
             margin: 5px;
         }
 
@@ -860,6 +885,18 @@
                 font-size: 1.9rem;
             }
         }
+        
+        /* Correction du problème d'animation */
+        .dashboard-grid, .content-row {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .dashboard-grid.visible, .content-row.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -927,13 +964,15 @@
                         <input type="text" placeholder="Rechercher...">
                     </div>
                     
-                    <div class="user-profile" onclick="toggleDropdown()">
-                        <div class="user-avatar">MD</div>
-                        <div class="user-info">
-                            <h4>Marie Dupont</h4>
-                            <p>Patient</p>
+                    <div class="user-profile-container">
+                        <div class="user-profile" onclick="toggleDropdown()">
+                            <div class="user-avatar">MD</div>
+                            <div class="user-info">
+                                <h4>Marie Dupont</h4>
+                                <p>Patient</p>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        <i class="fas fa-chevron-down"></i>
 
                         <div id="dropdownMenu" class="dropdown-menu">
                             <a href="#"><i class="fas fa-user"></i> Mon profil</a>
@@ -946,7 +985,7 @@
             </header>
 
             <!-- Stats Dashboard -->
-            <div class="dashboard-grid">
+            <div class="dashboard-grid" id="dashboardGrid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Rendez-vous à venir</div>
@@ -993,7 +1032,7 @@
             </div>
 
             <!-- Main Content Row -->
-            <div class="content-row">
+            <div class="content-row" id="contentRow">
                 <!-- Left Column -->
                 <div class="left-column">
                     <!-- Rendez-vous à venir -->
@@ -1193,29 +1232,11 @@
             // Animer les éléments au chargement
             gsap.registerPlugin(ScrollTrigger);
             
-            // Animer les statistiques
-            gsap.from('.stat-card', {
-                scrollTrigger: {
-                    trigger: '.dashboard-grid',
-                    start: 'top 50%'
-                },
-                y: 50,
-                opacity: 1,
-                stagger: 0.15,
-                duration: 0.2
-            });
-            
-            // Animer les cartes
-            gsap.from('.card', {
-                scrollTrigger: {
-                    trigger: '.content-row',
-                    start: 'top 85%'
-                },
-                y: 50,
-                opacity: 1,
-                stagger: 0.2,
-                duration: 0.8
-            });
+            // Rendre les éléments visibles après un court délai
+            setTimeout(function() {
+                document.getElementById('dashboardGrid').classList.add('visible');
+                document.getElementById('contentRow').classList.add('visible');
+            }, 300);
             
             // Animation des éléments au survol
             const cards = document.querySelectorAll('.card, .stat-card, .indicator-card');
@@ -1241,15 +1262,16 @@
         // Toggle dropdown menu
         function toggleDropdown() {
             const menu = document.getElementById('dropdownMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            menu.classList.toggle('show');
         }
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
-            const profile = document.querySelector('.user-profile');
+            const profile = document.querySelector('.user-profile-container');
             const menu = document.getElementById('dropdownMenu');
+            
             if (!profile.contains(event.target)) {
-                menu.style.display = 'none';
+                menu.classList.remove('show');
             }
         });
         

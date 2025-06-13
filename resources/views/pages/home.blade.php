@@ -384,6 +384,15 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            /* Ajout: rendre initialement invisible et légèrement décalé vers le bas */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Animation GSAP corrigée */
+        .feature-card.animated {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .feature-card::before {
@@ -1259,7 +1268,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2023 MediConnect. Tous droits réservés.</p>
+            <p>&copy; 2025 MediConnect. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -1322,7 +1331,7 @@
             });
             
             // Features animations
-            gsap.from('.section-header', {
+             gsap.from('.section-header', {
                 scrollTrigger: {
                     trigger: '.features',
                     start: 'top 80%'
@@ -1332,15 +1341,23 @@
                 duration: 1
             });
             
-            gsap.from('.feature-card', {
+            
+             gsap.to('.feature-card', {
                 scrollTrigger: {
                     trigger: '.features-grid',
-                    start: 'top 85%'
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
                 },
-                y: 50,
-                opacity: 0,
+                y: 0,
+                opacity: 1,
                 stagger: 0.15,
-                duration: 0.8
+                duration: 0.8,
+                onComplete: function() {
+                    // Ajoute une classe pour maintenir l'état après l'animation
+                    document.querySelectorAll('.feature-card').forEach(card => {
+                        card.classList.add('animated');
+                    });
+                }
             });
             
             // How it works animations
