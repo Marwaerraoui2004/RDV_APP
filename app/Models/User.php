@@ -1,6 +1,10 @@
 <?php
 namespace App\Models;
 
+use App\Models\Prescription;
+use App\Models\Document;
+use App\Models\Appointment;
+use App\Models\Rating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,7 +33,7 @@ class User extends Authenticatable
     // Relationships
     public function patientAppointments()
     {
-        return $this->hasMany(Appointment::class, 'patient_id');
+        return $this->hasMany( Appointment::class, 'patient_id');
     }
 
     public function doctorAppointments()
@@ -45,5 +49,14 @@ class User extends Authenticatable
     public function givenRatings()
     {
         return $this->hasMany(Rating::class, 'patient_id');
+    }
+public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class, 'patient_id');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'patient_id');
     }
 }

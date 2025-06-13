@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User; 
-use App\Models\Appointment; 
 use App\Models\Rating; 
-use App\Models\Prescription; 
+use App\Models\Prescription;
+use Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -28,26 +28,26 @@ class DoctorController extends Controller
 
         // Dashboard data retrieval (as in the previous response)
         $today = Carbon::today();
-        $appointmentsToday = Appointment::where('doctor_id', $doctor->id)
-                                        ->whereDate('date', $today)
+        $appointmentsToday = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                        ->whereDate('appointment_date', $today)
                                         ->count();
 
         $yesterday = Carbon::yesterday();
-        $appointmentsYesterday = Appointment::where('doctor_id', $doctor->id)
-                                            ->whereDate('date', $yesterday)
+        $appointmentsYesterday = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                            ->whereDate('appointment_date', $yesterday)
                                             ->count();
         $appointmentComparisonToday = $appointmentsToday - $appointmentsYesterday;
 
 
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
-        $newPatientsThisWeek = Appointment::where('doctor_id', $doctor->id)
+        $newPatientsThisWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                           ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                                           ->distinct('patient_id')
                                           ->count();
         $startLastWeek = Carbon::now()->subWeek()->startOfWeek();
         $endLastWeek = Carbon::now()->subWeek()->endOfWeek();
-        $newPatientsLastWeek = Appointment::where('doctor_id', $doctor->id)
+        $newPatientsLastWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                           ->whereBetween('created_at', [$startLastWeek, $endLastWeek])
                                           ->distinct('patient_id')
                                           ->count();
@@ -56,16 +56,16 @@ class DoctorController extends Controller
 
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
-        $estimatedRevenueThisMonth = Appointment::where('doctor_id', $doctor->id)
+        $estimatedRevenueThisMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                                 ->where('status', 'completed')
-                                                ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                                                ->whereBetween('appointment_date', [$startOfMonth, $endOfMonth])
                                                 ->sum('cost');
 
         $startLastMonth = Carbon::now()->subMonth()->startOfMonth();
         $endLastMonth = Carbon::now()->subMonth()->endOfMonth();
-        $estimatedRevenueLastMonth = Appointment::where('doctor_id', $doctor->id)
+        $estimatedRevenueLastMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                                 ->where('status', 'completed')
-                                                ->whereBetween('date', [$startLastMonth, $endLastMonth])
+                                                ->whereBetween('appointment_date', [$startLastMonth, $endLastMonth])
                                                 ->sum('cost');
         $revenueComparisonMonth = ($estimatedRevenueLastMonth > 0) ?
                                   (($estimatedRevenueThisMonth - $estimatedRevenueLastMonth) / $estimatedRevenueLastMonth) * 100
@@ -88,16 +88,16 @@ class DoctorController extends Controller
         $satisfactionComparisonQuarter = $currentQuarterRatings - $previousQuarterRatings;
 
 
-        $upcomingAppointments = Appointment::where('doctor_id', $doctor->id)
-                                          ->where('date', '>=', $today)
+        $upcomingAppointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                          ->where('appointment_date', '>=', $today)
                                           ->whereIn('status', ['pending', 'confirmed'])
-                                          ->orderBy('date')
-                                          ->orderBy('time')
+                                          ->orderBy('appointment_date')
+                                          ->orderBy('appointment_time')
                                           ->limit(5)
                                           ->with('patient')
                                           ->get();
 
-        return view('doctor.dashboard', [
+        return view('pages.docteur', [
             'doctor' => $doctor,
             'appointmentsToday' => $appointmentsToday,
             'appointmentComparisonToday' => $appointmentComparisonToday,
@@ -120,10 +120,10 @@ class DoctorController extends Controller
     {
         $doctor = Auth::user();
 
-        $appointments = Appointment::where('doctor_id', $doctor->id)
+        $appointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                    ->with('patient') // Eager load patient details
-                                   ->orderBy('date', 'desc')
-                                   ->orderBy('time', 'desc')
+                                   ->orderBy('appointment_date', 'desc')
+                                   ->orderBy('appointment_time', 'desc')
                                    ->paginate(10); // Paginate for large lists
 
         return view('doctor.appointments.index', compact('appointments'));
@@ -152,17 +152,17 @@ class DoctorController extends Controller
 
         $request->validate([
             'patient_id' => 'required|exists:users,id,role,patient',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required|date_format:H:i',
+            'appointment_date' => 'required|date|after_or_equal:today',
+            'appointment_time' => 'required|date_format:H:i',
             'cost' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        Appointment::create([
+        \App\Models\Appointment::create([
             'doctor_id' => $doctor->id,
             'patient_id' => $request->patient_id,
-            'date' => $request->date,
-            'time' => $request->time,
+            'appointment_date' => $request->appointment_date,
+            'appointment_time' => $request->appointment_time,
             'status' => 'pending', // Default status for new appointments
             'cost' => $request->cost,
             'notes' => $request->notes,
@@ -177,7 +177,7 @@ class DoctorController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\View\View
      */
-    public function showAppointment(Appointment $appointment)
+    public function showAppointment(\App\Models\Appointment $appointment)
     {
         // Ensure the doctor owns this appointment
         if (Auth::id() !== $appointment->doctor_id) {
@@ -196,7 +196,7 @@ class DoctorController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\View\View
      */
-    public function editAppointment(Appointment $appointment)
+    public function editAppointment(\App\Models\Appointment $appointment)
     {
         if (Auth::id() !== $appointment->doctor_id) {
             abort(403, 'Accès non autorisé.');
@@ -212,7 +212,7 @@ class DoctorController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateAppointment(Request $request, Appointment $appointment)
+    public function updateAppointment(Request $request, \App\Models\Appointment $appointment)
     {
         if (Auth::id() !== $appointment->doctor_id) {
             abort(403, 'Accès non autorisé.');
@@ -220,8 +220,8 @@ class DoctorController extends Controller
 
         $request->validate([
             'patient_id' => 'required|exists:users,id,role,patient',
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|date_format:H:i',
             'status' => 'required|in:pending,confirmed,completed,cancelled',
             'cost' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
@@ -238,7 +238,7 @@ class DoctorController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroyAppointment(Appointment $appointment)
+    public function destroyAppointment(\App\Models\Appointment $appointment)
     {
         if (Auth::id() !== $appointment->doctor_id) {
             abort(403, 'Accès non autorisé.');
@@ -285,7 +285,7 @@ class DoctorController extends Controller
         $doctor = Auth::user();
 
         // Ensure this doctor has a history with this patient
-        $hasHistory = Appointment::where('doctor_id', $doctor->id)
+        $hasHistory = \App\Models\Appointment::where('doctor_id', $doctor->id)
                                  ->where('patient_id', $patient->id)
                                  ->exists();
 
@@ -295,7 +295,7 @@ class DoctorController extends Controller
 
         $appointments = $patient->patientAppointments()
                                 ->where('doctor_id', $doctor->id)
-                                ->orderBy('date', 'desc')
+                                ->orderBy('appointment_date', 'desc')
                                 ->get();
 
         $prescriptions = Prescription::where('doctor_id', $doctor->id)
@@ -337,7 +337,7 @@ class DoctorController extends Controller
      * @param  \App\Models\Appointment|null  $appointment (optional, for direct linking)
      * @return \Illuminate\View\View
      */
-    public function createPrescription(Appointment $appointment = null)
+    public function createPrescription(\App\Models\Appointment $appointment = null)
     {
         $doctor = Auth::user();
         $patients = User::where('role', 'patient')->get();
@@ -374,7 +374,7 @@ class DoctorController extends Controller
 
         // Optional: Verify that the patient_id is related to the doctor if appointment_id is provided
         if ($request->appointment_id) {
-            $appointment = Appointment::find($request->appointment_id);
+            $appointment = \App\Models\Appointment::find($request->appointment_id);
             if (!$appointment || $appointment->doctor_id !== $doctor->id || $appointment->patient_id !== $request->patient_id) {
                 return back()->withErrors(['appointment_id' => 'Rendez-vous ou patient invalide pour ce docteur.']);
             }
@@ -451,7 +451,7 @@ class DoctorController extends Controller
 
         // Optional: Verify that the patient_id is related to the doctor if appointment_id is provided
         if ($request->appointment_id) {
-            $appointment = Appointment::find($request->appointment_id);
+            $appointment = \App\Models\Appointment::find($request->appointment_id);
             if (!$appointment || $appointment->doctor_id !== $prescription->doctor_id || $appointment->patient_id !== $request->patient_id) {
                 return back()->withErrors(['appointment_id' => 'Rendez-vous ou patient invalide pour ce docteur.']);
             }

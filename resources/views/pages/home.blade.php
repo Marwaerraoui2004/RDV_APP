@@ -3,84 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediConnect - Présentation Premium</title>
+    <title>MediConnect - Plateforme Médicale Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/TextPlugin.min.js"></script>
     <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #ff006e;
+            --accent: #8338ec;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --card-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #0d4a75;
-            --secondary: #1a6b9f;
-            --accent: #38b6a1;
-            --light: #f0f7ff;
-            --dark: #1c3d5a;
-            --text-dark: #2d3748;
-            --text-light: #718096;
-            --transition: all 0.4s ease;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f9fc 0%, #e6f0f5 100%);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
             overflow-x: hidden;
-            min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
         }
 
-        /* Header & Navigation */
-        header {
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80') no-repeat center center/cover;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        /* Loader Squelette */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3a86ff 0%, #8338ec 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .loader-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .loader-bar {
+            width: 300px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: white;
+            animation: loading 2s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            70% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: fixed;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+            opacity: 0.4;
+        }
+
+        .element-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -250px;
+            right: -100px;
+            animation: float1 15s infinite ease-in-out;
+        }
+
+        .element-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -100px;
+            animation: float2 18s infinite ease-in-out;
+        }
+
+        .element-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 50%;
+            left: 10%;
+            animation: float3 12s infinite ease-in-out;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-50px, -50px) rotate(10deg); }
+            50% { transform: translate(0px, -100px) rotate(0deg); }
+            75% { transform: translate(50px, -50px) rotate(-10deg); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(-10deg); }
+            50% { transform: translate(100px, 0px) rotate(0deg); }
+            75% { transform: translate(50px, 50px) rotate(10deg); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -40px) rotate(15deg); }
+            50% { transform: translate(-20px, -20px) rotate(0deg); }
+            75% { transform: translate(-40px, 20px) rotate(-15deg); }
+        }
+
+        /* Header */
+        #header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            transition: var(--transition);
+            padding: 1.5rem 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 5px 20px rgba(13, 74, 117, 0.05);
+            transition: var(--transition);
         }
 
-        header.scrolled {
+        #header.scrolled {
             padding: 1rem 5%;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 5px 20px rgba(13, 74, 117, 0.1);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
         }
 
         .logo {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
 
         .logo i {
-            font-size: 2.2rem;
-            color: var(--accent);
-            margin-right: 12px;
+            color: var(--primary);
+            font-size: 2rem;
         }
 
         .logo h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            color: var(--primary);
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .nav-buttons {
             display: flex;
-            gap: 1.2rem;
+            gap: 15px;
         }
 
         .btn {
@@ -88,13 +223,13 @@
             border-radius: 50px;
             font-weight: 600;
             font-size: 1rem;
-            cursor: pointer;
+            text-decoration: none;
             transition: var(--transition);
+            display: inline-block;
+            cursor: pointer;
             border: none;
             outline: none;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn-login {
@@ -107,387 +242,559 @@
             background: var(--primary);
             color: white;
             transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(58, 134, 255, 0.3);
         }
 
         .btn-register {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--primary), var(--accent));
             color: white;
-            box-shadow: 0 5px 15px rgba(13, 74, 117, 0.3);
+            border: 2px solid transparent;
         }
 
         .btn-register:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(13, 74, 117, 0.4);
-            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            box-shadow: 0 10px 20px rgba(131, 56, 236, 0.3);
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
         }
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
             display: flex;
-            align-items: center;
+            min-height: 100vh;
             padding: 0 5%;
+            align-items: center;
             position: relative;
             overflow: hidden;
+            padding-top: 100px;
         }
 
         .hero-content {
-            max-width: 650px;
+            flex: 1;
+            padding-right: 50px;
             z-index: 2;
-            padding-top: 6rem;
         }
 
-        .hero h2 {
-            font-family: 'Poppins', sans-serif;
+        .hero-content h2 {
+            font-family: 'Montserrat', sans-serif;
             font-size: 3.5rem;
+            font-weight: 700;
             line-height: 1.2;
-            color: var(--primary);
             margin-bottom: 1.5rem;
-            font-weight: 800;
         }
 
-        .hero h2 span {
-            color: var(--accent);
-            position: relative;
+        .hero-content h2 span {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero h2 span::after {
-            content: "";
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            width: 100%;
-            height: 15px;
-            background: rgba(56, 182, 161, 0.25);
-            z-index: -1;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: var(--text-dark);
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--gray);
             margin-bottom: 2.5rem;
             max-width: 600px;
+            line-height: 1.6;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .btn-large {
-            padding: 1.1rem 2.5rem;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            gap: 20px;
         }
 
         .hero-image {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 45%;
-            max-width: 700px;
+            flex: 1;
+            position: relative;
             z-index: 1;
+            perspective: 1000px;
         }
 
         .hero-image img {
             width: 100%;
+            max-width: 600px;
             border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(13, 74, 117, 0.2);
+            box-shadow: var(--card-shadow);
+            transform: rotateY(-5deg) rotateX(5deg);
+            border: 10px solid white;
+            animation: floatImage 8s infinite ease-in-out;
         }
 
-        /* Floating elements */
-        .floating-element {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            z-index: 0;
-            opacity: 0.7;
+        @keyframes floatImage {
+            0%, 100% { transform: rotateY(-5deg) rotateX(5deg) translateY(0); }
+            50% { transform: rotateY(5deg) rotateX(-2deg) translateY(-20px); }
         }
 
-        .element-1 {
-            width: 400px;
-            height: 400px;
-            top: 20%;
-            left: 10%;
-            background: radial-gradient(circle, rgba(56, 182, 161, 0.4) 0%, transparent 70%);
-        }
-
-        .element-2 {
-            width: 300px;
-            height: 300px;
-            bottom: 30%;
-            right: 20%;
-            background: radial-gradient(circle, rgba(13, 74, 117, 0.4) 0%, transparent 70%);
-        }
-
-        .element-3 {
-            width: 200px;
-            height: 200px;
-            top: 50%;
-            left: 30%;
-            background: radial-gradient(circle, rgba(26, 107, 159, 0.4) 0%, transparent 70%);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 8rem 5%;
-            background: white;
+        /* Sections communes */
+        section {
+            padding: 100px 5%;
             position: relative;
-            overflow: hidden;
         }
 
         .section-header {
             text-align: center;
             max-width: 800px;
-            margin: 0 auto 5rem;
+            margin: 0 auto 70px;
         }
 
         .section-header h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.8rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
             font-weight: 700;
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
         }
 
         .section-header p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.7;
         }
 
+        /* Features Section */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
+            gap: 30px;
+            margin-top: 40px;
         }
 
         .feature-card {
-            background: var(--light);
+            background: white;
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 40px 30px;
             text-align: center;
             transition: var(--transition);
-            box-shadow: var(--shadow);
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
         .feature-card::before {
-            content: "";
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            height: 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0.9;
+        }
+
+        .feature-card:hover::before {
+            height: 100%;
         }
 
         .feature-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 40px rgba(13, 74, 117, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: white;
+            color: var(--primary);
+        }
+
+        .feature-card:hover h3, 
+        .feature-card:hover p {
+            color: white;
         }
 
         .feature-icon {
-            width: 90px;
-            height: 90px;
-            background: rgba(56, 182, 161, 0.1);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.5rem;
-            color: var(--accent);
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 2rem;
             transition: var(--transition);
         }
 
-        .feature-card:hover .feature-icon {
-            background: var(--accent);
-            color: white;
-            transform: scale(1.1);
-        }
-
         .feature-card h3 {
-            font-size: 1.6rem;
-            color: var(--primary);
-            margin-bottom: 1.2rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            transition: var(--transition);
         }
 
         .feature-card p {
-            color: var(--text-light);
-            font-size: 1.1rem;
+            color: var(--gray);
+            transition: var(--transition);
+            line-height: 1.6;
         }
 
-        /* Testimonials */
-        .testimonials {
-            padding: 8rem 5%;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+        /* How it works section */
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .steps-line {
+            position: absolute;
+            top: 60px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: var(--light-gray);
+            z-index: -1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 25%;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 3px solid var(--primary);
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(58, 134, 255, 0.2);
+        }
+
+        .step-content {
+            text-align: center;
+        }
+
+        .step-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .step-content p {
+            color: var(--gray);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 80px 5%;
             color: white;
+            text-align: center;
+            border-radius: 20px;
+            margin: 100px 5% 0;
             position: relative;
             overflow: hidden;
-            clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
         }
 
-        .testimonials::before {
-            content: "";
+        .stats-section::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(56, 182, 161, 0.15) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(13, 74, 117, 0.2) 0%, transparent 25%);
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 1;
         }
 
-        .testimonials-grid {
+        .stats-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            max-width: 1300px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
 
-        .testimonial-card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 2.5rem;
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .stat-text {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials Slider */
+        .testimonials {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             position: relative;
             overflow: hidden;
         }
 
-        .testimonial-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        .testimonials-slider {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            height: 400px;
+            overflow: hidden;
         }
 
-        .testimonial-card::before {
-            content: """;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 6rem;
-            color: rgba(255, 255, 255, 0.1);
-            font-family: serif;
-            line-height: 1;
+        .slider-container {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            height: 100%;
+        }
+
+        .testimonial-card {
+            min-width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
         .testimonial-content {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-style: italic;
-            margin-bottom: 1.8rem;
+            line-height: 1.7;
+            color: var(--gray);
+            margin-bottom: 30px;
             position: relative;
-            z-index: 2;
+            padding-left: 30px;
+        }
+
+        .testimonial-content::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            top: -20px;
+            font-size: 4rem;
+            color: var(--light-gray);
+            font-family: serif;
+            line-height: 1;
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
         .author-avatar {
             width: 60px;
             height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 50%;
-            background: var(--light);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1.2rem;
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 1.4rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
         }
 
         .author-info h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
         }
 
         .author-info p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 50px auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            color: var(--primary);
+        }
+
+        .faq-question i {
+            transition: var(--transition);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 25px;
+            max-height: 500px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
         }
 
         /* CTA Section */
         .cta {
-            padding: 8rem 5%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 30px;
+            padding: 80px 5%;
+            margin: 100px 5% 0;
             text-align: center;
-            background: white;
+            color: white;
             position: relative;
             overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 1;
         }
 
         .cta-content {
+            position: relative;
+            z-index: 2;
             max-width: 800px;
             margin: 0 auto;
-            background: linear-gradient(135deg, var(--light) 0%, #e0f0f7 100%);
-            padding: 5rem;
-            border-radius: 25px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow);
         }
 
         .cta h2 {
-            font-family: 'Poppins', sans-serif;
             font-size: 2.8rem;
-            color: var(--primary);
             margin-bottom: 1.5rem;
-            font-weight: 700;
         }
 
         .cta p {
-            font-size: 1.3rem;
-            color: var(--text-light);
+            font-size: 1.2rem;
             margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .cta .btn-register {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta .btn-login {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+
+        .cta .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Footer */
         footer {
             background: var(--dark);
             color: white;
-            padding: 5rem 5% 3rem;
+            padding: 80px 5% 30px;
             position: relative;
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            max-width: 1300px;
-            margin: 0 auto 4rem;
+            gap: 40px;
+            margin-bottom: 60px;
         }
 
         .footer-col h3 {
             font-size: 1.4rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
             position: relative;
-            padding-bottom: 0.8rem;
+            padding-bottom: 10px;
         }
 
         .footer-col h3::after {
-            content: "";
+            content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 50px;
             height: 3px;
-            background: var(--accent);
+            background: var(--primary);
         }
 
         .footer-links {
@@ -495,7 +802,7 @@
         }
 
         .footer-links li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 12px;
         }
 
         .footer-links a {
@@ -504,6 +811,7 @@
             transition: var(--transition);
             display: flex;
             align-items: center;
+            gap: 10px;
         }
 
         .footer-links a:hover {
@@ -512,15 +820,13 @@
         }
 
         .footer-links a i {
-            margin-right: 10px;
-            color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .social-links a {
@@ -536,127 +842,122 @@
         }
 
         .social-links a:hover {
-            background: var(--accent);
+            background: var(--primary);
             transform: translateY(-5px);
         }
 
         .copyright {
             text-align: center;
-            padding-top: 2rem;
+            padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-        }
-
-        /* Animations */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            50% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.7; }
+            font-size: 0.9rem;
         }
 
         /* Responsive */
-        @media (max-width: 1200px) {
-            .hero h2 {
-                font-size: 3rem;
-            }
-            .hero-image {
-                width: 40%;
-            }
-        }
-
         @media (max-width: 992px) {
             .hero {
                 flex-direction: column;
                 text-align: center;
-                padding-top: 8rem;
+                padding-top: 150px;
             }
+            
             .hero-content {
-                max-width: 100%;
-                padding-top: 0;
+                padding-right: 0;
+                margin-bottom: 50px;
             }
+            
             .hero-buttons {
                 justify-content: center;
             }
-            .hero-image {
-                position: relative;
-                width: 80%;
-                margin-top: 4rem;
-                right: auto;
-                top: auto;
-                transform: none;
+            
+            .hero-content h2 {
+                font-size: 2.8rem;
             }
-            .hero p {
-                margin-left: auto;
-                margin-right: auto;
+            
+            .hero-content p {
+                margin: 0 auto 2rem;
+            }
+
+            .steps-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .steps-line {
+                display: none;
+            }
+
+            .step {
+                width: 100%;
+                max-width: 400px;
+                margin-bottom: 40px;
             }
         }
 
         @media (max-width: 768px) {
-            header {
-                padding: 1.2rem 5%;
+            .hero-content h2 {
+                font-size: 2.3rem;
             }
-            .hero h2 {
-                font-size: 2.5rem;
-            }
-            .hero p {
-                font-size: 1.1rem;
-            }
+            
             .section-header h2 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
-            .btn-large {
-                padding: 1rem 2rem;
-                font-size: 1rem;
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
             }
-            .cta-content {
-                padding: 3rem 2rem;
-            }
+            
             .cta h2 {
                 font-size: 2.2rem;
             }
-            .cta p {
-                font-size: 1.1rem;
+            
+            .testimonial-card {
+                padding: 30px;
             }
         }
 
         @media (max-width: 576px) {
-            .nav-buttons {
-                gap: 0.8rem;
+            .logo h1 {
+                font-size: 1.5rem;
             }
+            
             .btn {
                 padding: 0.6rem 1.2rem;
                 font-size: 0.9rem;
             }
-            .hero h2 {
+            
+            .btn-large {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .hero-content h2 {
                 font-size: 2rem;
             }
-            .hero-buttons {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .hero-image {
-                width: 100%;
-            }
-            .feature-card {
-                padding: 2rem;
-            }
-            .section-header h2 {
-                font-size: 1.8rem;
-            }
-            .section-header p {
-                font-size: 1rem;
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loader Squelette -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="loader-text"> MediConnect...</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating background elements -->
     <div class="floating-element element-1"></div>
     <div class="floating-element element-2"></div>
@@ -669,8 +970,8 @@
             <h1>MediConnect</h1>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-login">Connexion</button>
-            <button class="btn btn-register">Inscription</button>
+            <a href="{{route('login.create')}}" class="btn btn-login" style="text-decoration: none; color: inherit;">Connexion</a>
+            <a href="{{route('register.create')}}" class="btn btn-register" style="text-decoration: none; color: inherit;">Inscription</a>
         </div>
     </header>
 
@@ -684,9 +985,7 @@
                 <button class="btn btn-login btn-large">Voir la démo</button>
             </div>
         </div>
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="MediConnect Plateforme Médicale">
-        </div>
+        
     </section>
 
     <!-- Features Section -->
@@ -701,42 +1000,109 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <h3>Gestion de rendez-vous</h3>
-                <p>Prenez, modifiez ou annulez vos rendez-vous en quelques clics, 24h/24 et 7j/7.</p>
+                <p>Prenez, modifiez ou annulez vos rendez-vous en quelques clics, 24h/24 et 7j/7. Recevez des rappels automatiques par SMS et email.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-file-medical"></i>
                 </div>
                 <h3>Dossier médical sécurisé</h3>
-                <p>Tous vos documents médicaux centralisés et accessibles en toute sécurité.</p>
+                <p>Tous vos documents médicaux centralisés et accessibles en toute sécurité. Stockage crypté conforme aux normes de santé.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-envelope"></i>
                 </div>
                 <h3>Messagerie médicale</h3>
-                <p>Échangez en toute confidentialité avec vos professionnels de santé.</p>
+                <p>Échangez en toute confidentialité avec vos professionnels de santé. Protocole de sécurité de niveau militaire.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-user-md"></i>
                 </div>
                 <h3>Trouver un spécialiste</h3>
-                <p>Accédez à notre réseau de professionnels de santé qualifiés et vérifiés.</p>
+                <p>Accédez à notre réseau de professionnels de santé qualifiés et vérifiés. Filtrez par spécialité, disponibilité et localisation.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-bell"></i>
                 </div>
                 <h3>Rappels intelligents</h3>
-                <p>Ne manquez plus jamais un rendez-vous ou une prise de médicament.</p>
+                <p>Ne manquez plus jamais un rendez-vous ou une prise de médicament. Personnalisez vos alertes selon vos besoins.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3>Suivi santé personnalisé</h3>
-                <p>Visualisez l'évolution de vos indicateurs de santé au fil du temps.</p>
+                <p>Visualisez l'évolution de vos indicateurs de santé au fil du temps. Partagez vos données avec vos médecins.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>Comment fonctionne MediConnect</h2>
+            <p>Une solution simple en 4 étapes pour prendre le contrôle de votre santé</p>
+        </div>
+        <div class="steps-container">
+            <div class="steps-line"></div>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Créez votre compte</h3>
+                    <p>Inscrivez-vous en 2 minutes et complétez votre profil médical</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Importez vos documents</h3>
+                    <p>Centralisez vos ordonnances, résultats d'analyses et comptes-rendus</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Connectez-vous aux professionnels</h3>
+                    <p>Trouvez et prenez rendez-vous avec des médecins près de chez vous</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Gérez votre santé</h3>
+                    <p>Suivez vos indicateurs, médicaments et rendez-vous en un seul endroit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-content">
+            <div class="section-header">
+                <h2>MediConnect en chiffres</h2>
+                <p>Rejoignez une communauté grandissante de patients et professionnels satisfaits</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-text">Patients actifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3K+</div>
+                    <div class="stat-text">Professionnels de santé</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-text">Satisfaction utilisateurs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-text">Support disponible</div>
+                </div>
             </div>
         </div>
     </section>
@@ -747,35 +1113,88 @@
             <h2>Ce que nos utilisateurs disent</h2>
             <p>Découvrez les témoignages de nos patients et médecins satisfaits</p>
         </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <p class="testimonial-content">"Grâce à MediConnect, j'ai pu trouver un spécialiste disponible rapidement et gérer mes ordonnances sans me déplacer. Une révolution pour mon quotidien !"</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">MD</div>
-                    <div class="author-info">
-                        <h4>Marie Dubois</h4>
-                        <p>Patient depuis 2022</p>
+        <div class="testimonials-slider">
+            <div class="slider-container">
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"Grâce à MediConnect, j'ai pu trouver un spécialiste disponible rapidement et gérer mes ordonnances sans me déplacer. Une révolution pour mon quotidien !"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MD</div>
+                        <div class="author-info">
+                            <h4>Marie Dubois</h4>
+                            <p>Patient depuis 2022</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"En tant que médecin, MediConnect m'a permis de réduire mon temps administratif de 30% et d'améliorer la relation avec mes patients. La messagerie sécurisée est un vrai plus."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">DL</div>
+                        <div class="author-info">
+                            <h4>Dr. David Lambert</h4>
+                            <p>Cardiologue</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"La centralisation de mon dossier médical est un soulagement. Plus besoin de transporter mes documents, tout est accessible en un clic, même en déplacement."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">TP</div>
+                        <div class="author-info">
+                            <h4>Thomas Petit</h4>
+                            <p>Patient depuis 2023</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <p class="testimonial-content">"En tant que médecin, MediConnect m'a permis de réduire mon temps administratif de 30% et d'améliorer la relation avec mes patients. La messagerie sécurisée est un vrai plus."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">DL</div>
-                    <div class="author-info">
-                        <h4>Dr. David Lambert</h4>
-                        <p>Cardiologue</p>
-                    </div>
+        </div>
+        <div class="slider-nav">
+            <div class="slider-dot active" data-index="0"></div>
+            <div class="slider-dot" data-index="1"></div>
+            <div class="slider-dot" data-index="2"></div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="section-header">
+            <h2>Questions fréquentes</h2>
+            <p>Trouvez les réponses aux questions les plus courantes sur notre plateforme</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    Comment garantir la confidentialité de mes données médicales ?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>MediConnect utilise un cryptage de niveau bancaire pour protéger vos données. Nous respectons strictement les normes RGPD et HIPAA pour la sécurité des données médicales. Seuls les professionnels de santé que vous autorisez explicitement peuvent accéder à vos informations.</p>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <p class="testimonial-content">"La centralisation de mon dossier médical est un soulagement. Plus besoin de transporter mes documents, tout est accessible en un clic, même en déplacement."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">TP</div>
-                    <div class="author-info">
-                        <h4>Thomas Petit</h4>
-                        <p>Patient depuis 2023</p>
-                    </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Comment ajouter mes documents médicaux à la plateforme ?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Vous pouvez facilement importer vos documents médicaux en les téléchargeant depuis votre ordinateur ou smartphone. Nous acceptons les formats PDF, JPG et PNG. Vous pouvez également demander à votre médecin d'envoyer directement vos documents sur la plateforme.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Combien coûte l'utilisation de MediConnect ?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>L'inscription et l'utilisation de base de MediConnect sont gratuites. Nous proposons également un abonnement premium à 9,99€/mois qui donne accès à des fonctionnalités avancées comme l'analyse intelligente de vos données de santé, des rappels illimités et un support prioritaire.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Puis-je accéder à MediConnect depuis mon smartphone ?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolument ! MediConnect est disponible sur iOS et Android. Téléchargez notre application depuis l'App Store ou Google Play Store pour gérer votre santé où que vous soyez. Toutes vos données sont synchronisées en temps réel entre vos différents appareils.</p>
                 </div>
             </div>
         </div>
@@ -845,209 +1264,180 @@
     </footer>
 
     <script>
-        // Enregistrer les plugins GSAP
-        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+        // GSAP Animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loader after 2 seconds
+            setTimeout(() => {
+                gsap.to("#loader", {
+                    opacity: 0,
+                    visibility: 'hidden',
+                    duration: 0.8,
+                    onComplete: () => {
+                        document.getElementById('loader').remove();
+                    }
+                });
+            }, 2000);
 
-        // Animation du header
-        gsap.from('.logo', {
-            opacity: 0,
-            y: -20,
-            duration: 1.5,
-            ease: "elastic.out(1, 0.8)",
-            delay: 0.3
-        });
-
-        gsap.from('.nav-buttons', {
-            opacity: 0,
-            y: -20,
-            duration: 1.5,
-            ease: "elastic.out(1, 0.8)",
-            delay: 0.5
-        });
-
-        // Animation de la section hero
-        const heroTimeline = gsap.timeline();
-        heroTimeline
-            .from('.hero-content', {
-                opacity: 0,
-                y: 50,
-                duration: 1.5,
-                ease: "power3.out"
-            })
-            .from('.hero p', {
-                opacity: 0,
-                y: 30,
-                duration: 1,
-                ease: "power3.out"
-            }, "-=0.8")
-            .from('.hero-buttons', {
-                opacity: 0,
-                y: 30,
-                duration: 1,
-                stagger: 0.2,
-                ease: "power3.out"
-            }, "-=0.7")
-            .from('.hero-image', {
-                opacity: 0,
-                y: 50,
-                rotationY: 30,
-                duration: 1.5,
-                ease: "power3.out"
-            }, "-=1");
-
-        // Animation des éléments flottants
-        gsap.to('.element-1', {
-            y: 30,
-            duration: 4,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-
-        gsap.to('.element-2', {
-            y: -40,
-            duration: 5,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-
-        gsap.to('.element-3', {
-            y: 20,
-            duration: 3,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-
-        // Animation de texte dynamique
-        gsap.to("h2 span", {
-            text: {
-                value: ["connectée", "simplifiée", "sécurisée", "révolutionnée"],
-                delimiter: " "
-            },
-            duration: 3,
-            repeat: -1,
-            repeatDelay: 1,
-            ease: "none"
-        });
-
-        // Animation des sections au défilement
-        gsap.utils.toEach(".section-header, .feature-card, .testimonial-card, .cta-content", (element) => {
-            gsap.fromTo(element,
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: element,
-                        start: "top 80%",
-                        end: "bottom 20%",
-                        toggleActions: "play none none none",
-                        markers: false
-                    },
-                    ease: "power3.out"
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
                 }
-            );
-        });
+            });
 
-        // Animation au survol des cartes
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                gsap.to(card, {
-                    y: -15,
-                    scale: 1.03,
-                    duration: 0.5,
-                    ease: "power2.out"
+            // GSAP animations for hero section
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Hero section animations
+            gsap.from('.hero-content h2', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                delay: 0.5
+            });
+            
+            gsap.from('.hero-content p', {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                delay: 0.8
+            });
+            
+            gsap.from('.hero-buttons', {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                delay: 1.1
+            });
+            
+            gsap.from('.hero-image', {
+                x: 100,
+                opacity: 0,
+                duration: 1.2,
+                delay: 0.7,
+                ease: 'power3.out'
+            });
+            
+            // Features animations
+            gsap.from('.section-header', {
+                scrollTrigger: {
+                    trigger: '.features',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1
+            });
+            
+            gsap.from('.feature-card', {
+                scrollTrigger: {
+                    trigger: '.features-grid',
+                    start: 'top 85%'
+                },
+                y: 50,
+                opacity: 0,
+                stagger: 0.15,
+                duration: 0.8
+            });
+            
+            // How it works animations
+            gsap.from('.step', {
+                scrollTrigger: {
+                    trigger: '.how-it-works',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                stagger: 0.2,
+                duration: 0.8
+            });
+            
+            // Testimonials slider
+            const sliderContainer = document.querySelector('.slider-container');
+            const sliderDots = document.querySelectorAll('.slider-dot');
+            let currentSlide = 0;
+            const slideCount = document.querySelectorAll('.testimonial-card').length;
+            
+            function goToSlide(index) {
+                currentSlide = index;
+                sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Update dots
+                sliderDots.forEach((dot, i) => {
+                    if (i === currentSlide) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
                 });
-                gsap.to(card.querySelector('.feature-icon'), {
-                    y: -10,
-                    scale: 1.1,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    backgroundColor: "rgba(56, 182, 161, 0.2)"
+            }
+            
+            // Add click events to dots
+            sliderDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.getAttribute('data-index'));
+                    goToSlide(index);
                 });
             });
             
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    y: 0,
-                    scale: 1,
-                    duration: 0.7,
-                    ease: "elastic.out(1, 0.8)"
-                });
-                gsap.to(card.querySelector('.feature-icon'), {
-                    y: 0,
-                    scale: 1,
-                    duration: 0.7,
-                    ease: "elastic.out(1, 0.8)",
-                    backgroundColor: "rgba(56, 182, 161, 0.1)"
-                });
+            // Auto slide
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                goToSlide(currentSlide);
+            }, 5000);
+            
+            // Animate testimonials on scroll
+            gsap.from('.testimonials-slider', {
+                scrollTrigger: {
+                    trigger: '.testimonials',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1
             });
-        });
-
-        // Animation des boutons
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => {
-                gsap.to(btn, {
-                    y: -5,
-                    duration: 0.3,
-                    ease: "power2.out"
+            
+            // FAQ functionality
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all items
+                    faqItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Open clicked item if it was closed
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
                 });
             });
             
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    y: 0,
-                    duration: 0.5,
-                    ease: "elastic.out(1, 0.8)"
-                });
+            // CTA animation
+            gsap.from('.cta', {
+                scrollTrigger: {
+                    trigger: '.cta',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1
             });
-        });
-
-        // Animation du texte dans le header
-        gsap.to(".logo h1", {
-            text: "MediConnect Pro",
-            duration: 2,
-            delay: 2,
-            ease: "power2.inOut",
-            repeat: 1,
-            yoyo: true
-        });
-
-        // Animation de parallaxe pour les témoignages
-        gsap.to(".testimonials", {
-            backgroundPosition: "50% 100%",
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".testimonials",
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true
-            }
-        });
-
-        // Effet de vague sur le footer
-        gsap.to("footer", {
-            backgroundPosition: "0% 100%",
-            ease: "none",
-            scrollTrigger: {
-                trigger: "footer",
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true
-            }
-        });
-
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            
+            // Footer animation
+            gsap.from('.footer-grid', {
+                scrollTrigger: {
+                    trigger: 'footer',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1
+            });
         });
     </script>
 </body>

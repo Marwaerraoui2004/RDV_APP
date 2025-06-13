@@ -80,9 +80,9 @@ class RegisteredUserController extends Controller
 
     Auth::login($user);
 
-    if ($user->role === 'doctor') {
-        return view('pages.home');
+    if ($user->role === 'docteur') {
+        return redirect()->route('docteur.dashboard');
     } elseif ($user->role === 'patient') {
-        return view('pages.patient');
+        return redirect()->route('patient.dashboard');
     }}
 }

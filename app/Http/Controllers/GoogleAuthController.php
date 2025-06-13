@@ -7,6 +7,8 @@ use Google_Client;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+
 
 class GoogleAuthController extends Controller
 {
@@ -14,7 +16,7 @@ class GoogleAuthController extends Controller
     {
         $id_token = $request->input('credential');
 
-        $client = new Google_Client(['client_id' => 'TON_CLIENT_ID_GOOGLE']); // ← remplace ici
+        $client = new \Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
         $payload = $client->verifyIdToken($id_token);
 
         if ($payload) {
@@ -35,6 +37,7 @@ class GoogleAuthController extends Controller
         }
     }
     
+
 public function handleGoogleCallback()
 {
     try {
@@ -42,18 +45,32 @@ public function handleGoogleCallback()
 
         $user = User::where('email', $googleUser->getEmail())->first();
 
-        if ($user) {
-            Auth::login($user);
-            return redirect('/home');
+        // Créer l'utilisateur s'il n'existe pas
+        if (!$user) {
+            $user = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'password' => bcrypt(Str::random(24)),
+                'role' => 'patient' // ou 'docteur', à toi de gérer cette logique
+            ]);
+        }
+
+        Auth::login($user);
+
+        // Redirection selon le rôle
+        if ($user->role === 'patient') {
+            return redirect()->route('patient.dashboard');
+        } elseif ($user->role === 'docteur') {
+            return redirect()->route('docteur.dashboard');
         } else {
-            // Ne pas créer de compte, simplement renvoyer une erreur
-            return redirect('/login')->with('error', 'Aucun compte n\'est associé à cette adresse Google.');
+            return redirect('/home'); // ou une route par défaut
         }
 
     } catch (\Exception $e) {
         return redirect('/login')->with('error', 'Erreur lors de la connexion avec Google.');
     }
 }
+
 
 
     
@@ -67,4 +84,3 @@ public function handleGoogleCallback()
 
        
 }
-

@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\DoctorController;
+
 
 
 
@@ -27,17 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Route::get('/docteur/dashboard', [DocteurController::class, 'index'])->name('docteur.dashboard');
     // Route::get('/patient/dashboard', [PatientController::class, 'index'])->name('patient.dashboard');
-    Route::get('/docteur/dashboard', function () {
-            return view('pages.docteur'); 
-        })->name('docteur.dashboard');
-
-    Route::get('/patient/dashboard', function () {
-            return view('pages.patient'); 
-        })->name('patient.dashboard');
+    
+   
 });
-Route::post('/login/google', [GoogleAuthController::class, 'loginWithGoogle']);
-Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('google.callback');
 
 require __DIR__.'/auth.php';
 use App\Http\Controllers\PatientController;
@@ -50,18 +44,27 @@ Route::middleware(['auth'])->prefix('patient')->controller(PatientController::cl
     Route::post('/rendez-vous/heures-disponibles', 'getAvailableHours')->name('patient.appointments.hours');
 
     Route::get('/medecins', 'myDoctors')->name('patient.doctors');
+
     Route::get('/documents', 'myDocuments')->name('patient.documents');
+
     Route::get('/ordonnances', 'prescriptions')->name('patient.prescriptions');
     Route::get('/sante', 'health')->name('patient.health');
     Route::get('/messagerie', 'messaging')->name('patient.messaging');
     Route::get('/parametres', 'settings')->name('patient.settings');
+
+    Route::get('/recherche', [PatientController::class, 'recherche'])->name('patient.recherche');
+
 });
 
+Route::post('/login/google', [GoogleAuthController::class, 'loginWithGoogle']);
+    Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('google.callback');
 
 
+Route::middleware(['auth'])->group(function () {
+    
 
-Route::middleware(['auth', 'role:doctor'])->group(function () {
-    Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
+    Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('docteur.dashboard');
 
     // Appointments
     Route::get('/doctor/appointments', [DoctorController::class, 'manageAppointments'])->name('doctor.appointments.index');

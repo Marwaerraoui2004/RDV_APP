@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -36,5 +37,10 @@ public function resetPassword(Request $request)
     return redirect()->route('login')->with('success', 'Mot de passe mis à jour avec succès.');
 
  //
+}
+public function logout(Request $request)
+{
+    Auth::logout();
+    return redirect()->route('home')->with('success', 'Déconnexion réussie.');
 }
 }
