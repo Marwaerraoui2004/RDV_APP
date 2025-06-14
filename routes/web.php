@@ -5,10 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\DoctorController;
-
-
-
-
+use App\Http\Controllers\HealthIndicatorController;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -27,11 +24,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // Route::get('/docteur/dashboard', [DocteurController::class, 'index'])->name('docteur.dashboard');
-    // Route::get('/patient/dashboard', [PatientController::class, 'index'])->name('patient.dashboard');
-    
+       
    
 });
+
+
+
+
+
 
 require __DIR__.'/auth.php';
 use App\Http\Controllers\PatientController;
@@ -52,9 +52,25 @@ Route::middleware(['auth'])->prefix('patient')->controller(PatientController::cl
     Route::get('/messagerie', 'messaging')->name('patient.messaging');
     Route::get('/parametres', 'settings')->name('patient.settings');
 
-    Route::get('/recherche', [PatientController::class, 'recherche'])->name('patient.recherche');
+    Route::get('/recherche',  'recherche')->name('patient.recherche');
+    Route::get('/patient/contacter/{id}', [PatientController::class, 'contacter'])->name('patient.contact');
+    Route::get('/indicateurs/edit', [HealthIndicatorController::class, 'edit'])->name('health.edit');
+    Route::post('/indicateurs/update', [HealthIndicatorController::class, 'update'])->name('health.update');
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 Route::post('/login/google', [GoogleAuthController::class, 'loginWithGoogle']);
     Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');

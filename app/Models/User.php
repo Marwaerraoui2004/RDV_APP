@@ -15,7 +15,10 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name', 'email', 'password', 'role', 'phone', 'onmm',
-        'specialty', 'address', 'city', 'postal_code', 'secret_code',
+        'specialty', 'address', 'city', 'postal_code', 'secret_code','tension_arterielle',
+        'frequence_cardiaque',
+        'glycemie',
+        'imc',
     ];
 
     protected $hidden = [
@@ -54,6 +57,11 @@ public function prescriptions()
     {
         return $this->hasMany(Prescription::class, 'patient_id');
     }
+    public function doctors()
+{
+    return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')
+                ->withTimestamps();
+}
 
     public function documents()
     {

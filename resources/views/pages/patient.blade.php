@@ -914,38 +914,42 @@
             </div>
             
             <nav>
-                <a href="#" class="nav-item active">
-                    <i class="fas fa-home"></i>
-                    <span>Tableau de bord</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Mes rendez-vous</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-user-md"></i>
-                    <span>Mes médecins</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-file-medical"></i>
-                    <span>Mes documents</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-prescription"></i>
-                    <span>Mes ordonnances</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-heart"></i>
-                    <span>Ma santé</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-comments"></i>
-                    <span>Messagerie</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Paramètres</span>
-                </a>
+                <a href="{{ route('patient.dashboard') }}"
+                class="nav-item {{ request()->routeIs('patient.dashboard') ? 'active' : '' }}">
+                <i class="fas fa-home"></i>
+                <span>Tableau de bord</span>
+            </a>
+            <a href="{{ route('patient.appointments') }}"
+                class="nav-item {{ request()->routeIs('patient.appointments') ? 'active' : '' }}">
+                <i class="fas fa-calendar-check"></i>
+                <span>Mes rendez-vous</span>
+            </a>
+            <a href="{{ route('patient.doctors') }}"
+                class="nav-item {{ request()->routeIs('patient.doctors') ? 'active' : '' }}">
+                <i class="fas fa-user-md"></i>
+                <span>Mes médecins</span>
+            </a>
+            <a href="{{ route('patient.documents') }}"
+                class="nav-item {{ request()->routeIs('patient.documents') ? 'active' : '' }}">
+                <i class="fas fa-file-medical"></i>
+                <span>Mes documents</span>
+            </a>
+            <a href="{{ route('patient.prescriptions') }}" class="nav-item">
+                <i class="fas fa-prescription"></i>
+                <span>Mes ordonnances</span>
+            </a>
+            <a href="{{ route('patient.health') }}" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Ma santé</span>
+            </a>
+            <a href="{{ route('patient.messaging') }}" class="nav-item">
+                <i class="fas fa-comments"></i>
+                <span>Messagerie</span>
+            </a>
+            <a href="{{ route('patient.settings') }}" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </a>
             </nav>
         </aside>
 
@@ -955,30 +959,35 @@
             <header class="header">
                 <div class="header-title">
                     <h2>Mon Espace Patient</h2>
-                    <p>Bonjour Marie Dupont, voici votre tableau de bord</p>
+                    <p>Bonjour {{Auth::user()->name}}, voici votre tableau de bord</p>
                 </div>
                 
                 <div class="header-actions">
-                    <div class="search-box">
+                    <form action="{{ route('patient.recherche') }}" method="GET" class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Rechercher...">
-                    </div>
+                        <input type="text" name="q" placeholder="Rechercher...">
+                    </form>
                     
                     <div class="user-profile-container">
                         <div class="user-profile" onclick="toggleDropdown()">
-                            <div class="user-avatar">MD</div>
+                            <div class="user-avatar">
+                                {{ substr(Auth::user()->name, 0, 1) }}{{ substr(Auth::user()->name, strpos(Auth::user()->name, ' ') + 1, 1) }}
+                            </div>
+
                             <div class="user-info">
-                                <h4>Marie Dupont</h4>
-                                <p>Patient</p>
+                                <h4>{{Auth::user()->name}}</h4>
+                                <p>{{Auth::user()->role}}</p>
                             </div>
                             <i class="fas fa-chevron-down"></i>
                         </div>
 
                         <div id="dropdownMenu" class="dropdown-menu">
-                            <a href="#"><i class="fas fa-user"></i> Mon profil</a>
-                            <a href="#"><i class="fas fa-cog"></i> Paramètres</a>
+                            <a href="{{route('profile.edit')}}"><i class="fas fa-user"></i> Mon profil</a>
+                            <a href="{{route('patient.settings')}}"><i class="fas fa-cog"></i> Paramètres</a>
                             <a href="#"><i class="fas fa-question-circle"></i> Aide</a>
-                            <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                            <form action="{{route('logout')}}" method="POST">
+                                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -986,50 +995,73 @@
 
             <!-- Stats Dashboard -->
             <div class="dashboard-grid" id="dashboardGrid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-title">Rendez-vous à venir</div>
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Rendez-vous à venir</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
                     </div>
-                    <div class="stat-value">2</div>
-                    <div class="stat-change"><i class="fas fa-clock"></i> Prochain dans 3 jours</div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-title">Médecins suivis</div>
-                        <div class="stat-icon">
-                            <i class="fas fa-user-md"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-change"><i class="fas fa-user-plus"></i> Dernier ajout: Dr. Martin</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-title">Dernière consultation</div>
-                        <div class="stat-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">15 jours</div>
-                    <div class="stat-change"><i class="fas fa-calendar-alt"></i> Prochaine dans 1 mois</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-title">Documents médicaux</div>
-                        <div class="stat-icon">
-                            <i class="fas fa-file-medical"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">12</div>
-                    <div class="stat-change"><i class="fas fa-history"></i> Dernier ajouté hier</div>
+                <div class="stat-value">{{ $countUpcoming }}</div>
+                <div class="stat-change">
+                    <i class="fas fa-clock"></i>
+                    @if($nextAppointment)
+                        Prochain dans {{ $daysUntilNext }} jour(s)
+                    @else
+                        Aucun prochain rendez-vous
+                    @endif
                 </div>
             </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Médecins suivis</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                </div>
+                <div class="stat-value">{{ $countDoctors }}</div>
+                <div class="stat-change">
+                    <i class="fas fa-user-plus"></i>
+                    @if($lastDoctor)
+                        Dernier vu : {{ $lastDoctor }}
+                    @else
+                        Aucun médecin trouvé
+                    @endif
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Dernière consultation</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+                <div class="stat-value">
+                    {{ $daysSinceLast !== null ? $daysSinceLast . ' jours' : 'Aucune consultation' }}
+                </div>
+                <div class="stat-change"><i class="fas fa-calendar-alt"></i> Prochaine à venir</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Documents médicaux</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                </div>
+                <div class="stat-value">{{ $countDocuments }}</div>
+                <div class="stat-change">
+                    <i class="fas fa-history"></i>
+                    @if($lastDocDate)
+                        Dernier : {{ $lastDocDate->diffForHumans() }}
+                    @else
+                        Aucun document
+                    @endif
+                </div>
+            </div>
+        </div>
 
             <!-- Main Content Row -->
             <div class="content-row" id="contentRow">
@@ -1039,22 +1071,29 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Mes prochains rendez-vous</div>
-                            <div class="card-action">Voir tout</div>
+                            <div class="card-action"><a href="{{ route('patient.appointments') }}">Voir tout</a></div>
                         </div>
                         <div class="card-body">
                             <ul class="appointment-list">
+                                @forelse ($nextAppointmentsList as $appointment)
                                 <li class="appointment-item">
                                     <div class="appointment-time">
-                                        <div class="time">09:30</div>
-                                        <div class="date">Lun 15 Oct</div>
+                                        <div class="time">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('H:i') }}</div>
+                                        <div class="date">{{ \Carbon\Carbon::parse($appointment->appointment_date)->translatedFormat('D d M') }}</div>
                                     </div>
                                     <div class="appointment-info">
-                                        <h4>Dr. David Martin</h4>
-                                        <p><i class="fas fa-stethoscope"></i> Cardiologie</p>
-                                        <span class="appointment-status status-confirmed">Confirmé</span>
+                                        <h4>{{ optional($appointment->doctor)->name ?? 'Médecin inconnu' }}</h4>
+                                        <p><i class="fas fa-stethoscope"></i> {{ $appointment->speciality ?? 'Spécialité inconnue' }}</p>
+                                        <span class="appointment-status status-confirmed">{{ $appointment->status === 'confirmé' ? 'status-confirmed' : 'status-pending' }}">
+                                    {{ ucfirst($appointment->status) }}</span>
                                     </div>
                                 </li>
-                                <li class="appointment-item">
+                                @empty
+                                       <li class="appointment-item">
+                                            <p>Aucun rendez-vous à venir.</p>
+                                        </li>
+                                 @endforelse        
+                                {{-- <li class="appointment-item">
                                     <div class="appointment-time">
                                         <div class="time">11:00</div>
                                         <div class="date">Mer 24 Oct</div>
@@ -1064,7 +1103,7 @@
                                         <p><i class="fas fa-eye"></i> Ophtalmologie</p>
                                         <span class="appointment-status status-pending">En attente</span>
                                     </div>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </div>
@@ -1073,34 +1112,24 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Mes médecins</div>
-                            <div class="card-action">Tous voir</div>
+                            <div class="card-action"><a href="{{ route('patient.doctors') }}">Tous voir</a></div>
                         </div>
                         <div class="card-body">
                             <ul class="doctor-list">
+                                @forelse ($mesMedecins as $medecin)
                                 <li class="doctor-item">
-                                    <div class="doctor-avatar">DM</div>
+                                    <div class="doctor-avatar">{{ strtoupper(substr($medecin->name, 0, 1)) }}{{ strtoupper(substr(Str::after($medecin->name, ' '), 0, 1)) }}</div>
                                     <div class="doctor-info">
-                                        <h4>Dr. David Martin</h4>
-                                        <p><i class="fas fa-heartbeat"></i> Cardiologue</p>
+                                        <h4>Dr. {{ $medecin->name }}</h4>
+                                        <p><i class="fas fa-heartbeat"></i> {{ $medecin->speciality ?? 'Spécialité inconnue' }}</p>
                                     </div>
-                                    <button class="doctor-action">Contacter</button>
+                                    <a href="{{ route('patient.contact', $medecin->id) }}" class="doctor-action">Contacter</a>
                                 </li>
-                                <li class="doctor-item">
-                                    <div class="doctor-avatar">SB</div>
-                                    <div class="doctor-info">
-                                        <h4>Dr. Sophie Bernard</h4>
-                                        <p><i class="fas fa-eye"></i> Ophtalmologue</p>
-                                    </div>
-                                    <button class="doctor-action">Contacter</button>
-                                </li>
-                                <li class="doctor-item">
-                                    <div class="doctor-avatar">JL</div>
-                                    <div class="doctor-info">
-                                        <h4>Dr. Jean Lefebvre</h4>
-                                        <p><i class="fas fa-bone"></i> Rhumatologue</p>
-                                    </div>
-                                    <button class="doctor-action">Contacter</button>
-                                </li>
+                                 @empty
+                                    <li class="doctor-item">
+                                        <p>Aucun médecin trouvé.</p>
+                                    </li>
+                                @endforelse
                             </ul>
                         </div>
                     </div>
@@ -1117,7 +1146,7 @@
                             <div class="health-indicators">
                                 <div class="indicator-card">
                                     <div class="indicator-title">Tension artérielle</div>
-                                    <div class="indicator-value">125/80</div>
+                                    <div class="indicator-value">{{ auth()->user()->tension_arterielle ?? 'N/A' }}</div>
                                     <div class="indicator-range">
                                         <div class="indicator-progress" style="width: 75%"></div>
                                     </div>
@@ -1125,7 +1154,7 @@
                                 </div>
                                 <div class="indicator-card">
                                     <div class="indicator-title">Fréquence cardiaque</div>
-                                    <div class="indicator-value">72 bpm</div>
+                                    <div class="indicator-value">{{ auth()->user()->frequence_cardiaque ?? 'N/A' }} bpm</div>
                                     <div class="indicator-range">
                                         <div class="indicator-progress" style="width: 65%"></div>
                                     </div>
@@ -1133,7 +1162,7 @@
                                 </div>
                                 <div class="indicator-card">
                                     <div class="indicator-title">Glycémie</div>
-                                    <div class="indicator-value">1.0 g/L</div>
+                                    <div class="indicator-value">{{ auth()->user()->glycemie ?? 'N/A' }} g/L</div>
                                     <div class="indicator-range">
                                         <div class="indicator-progress" style="width: 40%"></div>
                                     </div>
@@ -1141,7 +1170,7 @@
                                 </div>
                                 <div class="indicator-card">
                                     <div class="indicator-title">IMC</div>
-                                    <div class="indicator-value">22.3</div>
+                                    <div class="indicator-value">{{ auth()->user()->imc ?? 'N/A' }}</div>
                                     <div class="indicator-range">
                                         <div class="indicator-progress" style="width: 55%"></div>
                                     </div>
@@ -1279,7 +1308,7 @@
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
+               
                 
                 // Remove active class from all items
                 navItems.forEach(i => i.classList.remove('active'));
