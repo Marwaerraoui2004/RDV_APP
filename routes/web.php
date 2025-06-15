@@ -5,11 +5,22 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HealthIndicatorController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $user = auth()->user();
+
+    if ($user->role === 'doctor') {
+        return redirect()->route('docteur.dashboard');
+    } elseif ($user->role === 'patient') {
+        return redirect()->route('patient.dashboard');
+    }
+
+    // fallback si aucun rôle reconnu
+    return redirect('/');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/renouvler-password', [AuthController::class, 'showResetForm'])->name('password.reset.form');
 Route::post('/renouvler-password', [AuthController::class, 'resetPassword'])->name('password.reset.direct');
@@ -25,11 +36,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
        
-   
+   Route::get('/indicateurs/edit', [HealthIndicatorController::class, 'edit'])->name('health.edit');
+    Route::post('/indicateurs/update', [HealthIndicatorController::class, 'update'])->name('health.update');
 });
 
 
 
+
+Route::middleware('auth')->group(function() {
+    Route::get('/documents', [DocumentController::class, 'index'])->name('patient.documents');
+    Route::get('/documents/download/{id}', [DocumentController::class, 'download'])->name('documents.download');
+});
 
 
 
@@ -37,29 +54,34 @@ require __DIR__.'/auth.php';
 use App\Http\Controllers\PatientController;
 
 Route::middleware(['auth'])->prefix('patient')->controller(PatientController::class)->group(function () {
-    Route::get('/dashboard', 'dashboard')->name('patient.dashboard');
+    Route::get('/dashboard', 'dashboard')->name('patient.dashboard')->middleware(['auth', 'verified']);
+
     Route::get('/rendez-vous', 'appointments')->name('patient.appointments');
-    Route::get('/rendez-vous/creer', 'createAppointment')->name('patient.appointments.create');
-    Route::post('/rendez-vous', 'storeAppointment')->name('patient.appointments.store');
-    Route::post('/rendez-vous/heures-disponibles', 'getAvailableHours')->name('patient.appointments.hours');
+    Route::get('/rendez-vous/create', 'create')->name('patient.appointments.create');
+    Route::post('/rendez-vous/store', 'store')->name('patient.appointments.store');
+
 
     Route::get('/medecins', 'myDoctors')->name('patient.doctors');
 
-    Route::get('/documents', 'myDocuments')->name('patient.documents');
+    Route::get('/patient/contact', [PatientController::class, 'contact'])->name('patient.contact');
+
 
     Route::get('/ordonnances', 'prescriptions')->name('patient.prescriptions');
     Route::get('/sante', 'health')->name('patient.health');
-    Route::get('/messagerie', 'messaging')->name('patient.messaging');
+    
     Route::get('/parametres', 'settings')->name('patient.settings');
 
     Route::get('/recherche',  'recherche')->name('patient.recherche');
-    Route::get('/patient/contacter/{id}', [PatientController::class, 'contacter'])->name('patient.contact');
-    Route::get('/indicateurs/edit', [HealthIndicatorController::class, 'edit'])->name('health.edit');
-    Route::post('/indicateurs/update', [HealthIndicatorController::class, 'update'])->name('health.update');
+    
 
 
 });
 
+
+Route::middleware('auth')->group(function () {
+    Route::get('/conseil/demande', [MessageController::class, 'create'])->name('message.create');
+    Route::post('/conseil', [MessageController::class, 'store'])->name('message.store');
+});
 
 
 

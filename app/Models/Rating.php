@@ -40,9 +40,6 @@ class Rating extends Model
         return $this->belongsTo(User::class, 'doctor_id');
     }
 
-    /**
-     * A rating belongs to the patient who gave it.
-     */
     public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');

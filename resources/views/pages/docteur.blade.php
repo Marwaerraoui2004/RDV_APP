@@ -10,22 +10,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <style>
         :root {
-            --primary: #0d4a75;
-            --primary-light: #1a6b9f;
-            --secondary: #38b6a1;
-            --secondary-dark: #2a9d8a;
-            --accent: #ff6b6b;
-            --light: #f0f7ff;
-            --dark: #1c3d5a;
-            --success: #48bb78;
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #ff006e;
+            --accent: #8338ec;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
             --warning: #ecc94b;
             --danger: #e53e3e;
             --text-dark: #2d3748;
             --text-light: #718096;
-            --border-radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --border-radius: 16px;
         }
 
         * {
@@ -35,13 +33,25 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f9fc 0%, #e4edf5 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
             color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80') no-repeat center center/cover;
+            opacity: 0.05;
+            z-index: -1;
         }
 
         /* Floating Elements */
@@ -50,53 +60,68 @@
             border-radius: 50%;
             z-index: -1;
             filter: blur(60px);
-            opacity: 0.2;
+            opacity: 0.3;
         }
 
         .element-1 {
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             background: var(--primary);
-            top: -150px;
+            top: -250px;
             right: -100px;
             animation: float1 15s infinite ease-in-out;
         }
 
         .element-2 {
-            width: 350px;
-            height: 350px;
+            width: 400px;
+            height: 400px;
             background: var(--secondary);
-            bottom: -100px;
+            bottom: -150px;
             left: -100px;
             animation: float2 18s infinite ease-in-out;
         }
 
+        .element-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 50%;
+            left: 10%;
+            animation: float3 12s infinite ease-in-out;
+        }
+
         @keyframes float1 {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(-30px, -30px) rotate(10deg); }
-            50% { transform: translate(0px, -60px) rotate(0deg); }
-            75% { transform: translate(30px, -30px) rotate(-10deg); }
+            25% { transform: translate(-50px, -50px) rotate(10deg); }
+            50% { transform: translate(0px, -100px) rotate(0deg); }
+            75% { transform: translate(50px, -50px) rotate(-10deg); }
         }
 
         @keyframes float2 {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(30px, -30px) rotate(-10deg); }
-            50% { transform: translate(60px, 0px) rotate(0deg); }
-            75% { transform: translate(30px, 30px) rotate(10deg); }
+            25% { transform: translate(50px, -50px) rotate(-10deg); }
+            50% { transform: translate(100px, 0px) rotate(0deg); }
+            75% { transform: translate(50px, 50px) rotate(10deg); }
         }
 
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -40px) rotate(15deg); }
+            50% { transform: translate(-20px, -20px) rotate(0deg); }
+            75% { transform: translate(-40px, 20px) rotate(-15deg); }
+        }
+
+        /* Layout */
         .dashboard-container {
             display: flex;
             min-height: 100vh;
-            position: relative;
-            z-index: 1;
         }
 
         /* Sidebar */
         .sidebar {
             width: 280px;
             background: white;
-            box-shadow: var(--shadow);
+            box-shadow: var(--card-shadow);
             padding: 1.5rem 0;
             height: 100vh;
             position: fixed;
@@ -114,22 +139,22 @@
         }
 
         .logo i {
-            font-size: 2.2rem;
-            color: var(--secondary);
+            font-size: 2rem;
+            color: var(--accent);
             margin-right: 12px;
         }
 
         .logo h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.6rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .nav-item {
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.5rem;
             display: flex;
             align-items: center;
             color: var(--text-dark);
@@ -138,54 +163,32 @@
             transition: var(--transition);
             margin: 0.3rem 0.5rem;
             border-radius: var(--border-radius);
-            position: relative;
         }
 
         .nav-item i {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             width: 30px;
-            color: var(--primary-light);
-            transition: var(--transition);
-        }
-
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(to right, rgba(13, 74, 117, 0.1), transparent);
-            border-radius: var(--border-radius);
+            color: var(--primary);
             transition: var(--transition);
         }
 
         .nav-item:hover {
+            background: rgba(58, 134, 255, 0.1);
             color: var(--primary);
         }
 
-        .nav-item:hover::before {
-            width: 100%;
-        }
-
         .nav-item:hover i {
-            color: var(--secondary);
-            transform: scale(1.1);
+            color: var(--accent);
         }
 
         .nav-item.active {
-            background: rgba(13, 74, 117, 0.1);
+            background: rgba(58, 134, 255, 0.15);
             color: var(--primary);
             font-weight: 600;
         }
 
         .nav-item.active i {
-            color: var(--secondary);
-        }
-
-        .nav-item.active::before {
-            width: 4px;
-            background: var(--secondary);
+            color: var(--accent);
         }
 
         /* Main Content */
@@ -194,7 +197,6 @@
             margin-left: 280px;
             padding: 2rem;
             position: relative;
-            z-index: 2;
         }
 
         /* Header */
@@ -206,7 +208,6 @@
             padding-bottom: 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
             position: relative;
-            z-index: 10;
         }
 
         .header-title h2 {
@@ -226,7 +227,6 @@
             align-items: center;
             gap: 1.2rem;
             position: relative;
-            z-index: 20;
         }
 
         .search-box {
@@ -234,20 +234,19 @@
         }
 
         .search-box input {
-            padding: 0.9rem 1rem 0.9rem 45px;
+            padding: 0.8rem 1rem 0.8rem 45px;
             border: 2px solid rgba(0,0,0,0.05);
             border-radius: 50px;
             width: 280px;
             font-size: 0.95rem;
             transition: var(--transition);
             background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .search-box input:focus {
-            border-color: var(--secondary);
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(56, 182, 161, 0.2);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
         }
 
         .search-box i {
@@ -256,7 +255,6 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-light);
-            z-index: 1;
         }
 
         .user-profile {
@@ -266,7 +264,7 @@
             padding: 0.7rem 1.2rem;
             background: white;
             border-radius: 50px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: var(--transition);
             position: relative;
@@ -281,7 +279,7 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -300,22 +298,27 @@
             color: var(--text-light);
         }
 
+        /* MODIFICATIONS POUR LE DROPDOWN */
+        .user-profile-container {
+            position: relative;
+        }
+        
         .dropdown-menu {
             position: absolute;
-            top: calc(100% + 10px);
+            top: calc(100% + 15px);
             right: 0;
             background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             padding: 15px;
             width: 220px;
-            z-index: 1000; /* Important : valeur élevée pour être au-dessus des cartes */
+            z-index: 10000; /* Très élevé pour être au-dessus de tout */
             display: none;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
-
+        
         .dropdown-menu.show {
             display: block;
             opacity: 1;
@@ -323,33 +326,31 @@
         }
 
         .dropdown-menu a {
-            display: block;
-            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
             color: var(--text-dark);
             text-decoration: none;
             border-radius: 8px;
             transition: var(--transition);
             margin: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .dropdown-menu a:hover {
-            background: rgba(13, 74, 117, 0.1);
+            background: rgba(58, 134, 255, 0.1);
             color: var(--primary);
         }
-
+        
         .dropdown-menu a i {
-            width: auto;
-            font-size: 1.1rem;
-            color: var(--secondary);
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
         }
 
         .btn-logout {
             width: 100%;
-            padding: 12px 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 10px 15px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             border: none;
             border-radius: 8px;
@@ -357,16 +358,15 @@
             font-weight: 600;
             transition: var(--transition);
             margin-top: 10px;
-            text-align: center;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
         .btn-logout:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(13, 74, 117, 0.3);
+            box-shadow: 0 5px 15px rgba(131, 56, 236, 0.3);
         }
 
         /* Stats Dashboard */
@@ -375,11 +375,8 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Stat Cards */
         .stat-card {
             background: white;
             border-radius: var(--border-radius);
@@ -388,7 +385,6 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            z-index: 1;
         }
 
         .stat-card::before {
@@ -396,9 +392,9 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 5px;
+            width: 6px;
             height: 100%;
-            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
         }
 
         .stat-card:hover {
@@ -420,37 +416,22 @@
         }
 
         .stat-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            background: rgba(56, 182, 161, 0.15);
-            color: var(--secondary);
-        }
-
-        .stat-card.patients .stat-icon {
-            background: rgba(13, 74, 117, 0.15);
-            color: var(--primary);
-        }
-
-        .stat-card.earnings .stat-icon {
-            background: rgba(72, 187, 120, 0.15);
-            color: var(--success);
-        }
-
-        .stat-card.rating .stat-icon {
-            background: rgba(236, 201, 75, 0.15);
-            color: var(--warning);
+            background: rgba(58, 134, 255, 0.1);
+            color: var(--accent);
         }
 
         .stat-value {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -474,11 +455,9 @@
             grid-template-columns: 2fr 1fr;
             gap: 1.8rem;
             margin-bottom: 2rem;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Appointments Card */
+        /* Cards */
         .card {
             background: white;
             border-radius: var(--border-radius);
@@ -486,11 +465,11 @@
             overflow: hidden;
             transition: var(--transition);
             position: relative;
-            z-index: 1;
+            margin: 5px;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
@@ -509,25 +488,22 @@
         }
 
         .card-action {
-            color: var(--secondary);
+            color: var(--accent);
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .card-action:hover {
             color: var(--primary);
-            transform: translateX(5px);
         }
 
         .card-body {
             padding: 1.8rem;
         }
 
+        /* Appointments */
         .appointment-list {
             list-style: none;
         }
@@ -541,8 +517,7 @@
         }
 
         .appointment-item:hover {
-            background: rgba(13, 74, 117, 0.03);
-            border-radius: var(--border-radius);
+            background: rgba(58, 134, 255, 0.03);
         }
 
         .appointment-item:last-child {
@@ -550,18 +525,12 @@
         }
 
         .appointment-time {
-            background: rgba(56, 182, 161, 0.1);
+            background: rgba(58, 134, 255, 0.1);
             border-radius: 12px;
-            padding: 1rem;
+            padding: 0.9rem;
             text-align: center;
             min-width: 100px;
             margin-right: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .appointment-item:hover .appointment-time {
-            transform: scale(1.05);
-            background: rgba(56, 182, 161, 0.15);
         }
 
         .appointment-time .time {
@@ -576,7 +545,7 @@
         }
 
         .appointment-info h4 {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             margin-bottom: 0.4rem;
             color: var(--text-dark);
         }
@@ -591,19 +560,19 @@
 
         .appointment-info p i {
             margin-right: 8px;
-            color: var(--secondary);
+            color: var(--accent);
         }
 
         .appointment-status {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
         }
 
         .status-confirmed {
-            background: rgba(72, 187, 120, 0.15);
+            background: rgba(56, 182, 161, 0.15);
             color: var(--success);
         }
 
@@ -626,8 +595,7 @@
         }
 
         .patient-item:hover {
-            background: rgba(13, 74, 117, 0.03);
-            border-radius: var(--border-radius);
+            background: rgba(58, 134, 255, 0.03);
         }
 
         .patient-item:last-child {
@@ -635,22 +603,17 @@
         }
 
         .patient-avatar {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1.2rem;
             color: white;
             font-weight: 600;
-            font-size: 1.2rem;
-            transition: var(--transition);
-        }
-
-        .patient-item:hover .patient-avatar {
-            transform: scale(1.1);
+            font-size: 1.3rem;
         }
 
         .patient-info h4 {
@@ -659,7 +622,7 @@
         }
 
         .patient-info p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
             display: flex;
             align-items: center;
@@ -667,14 +630,14 @@
 
         .patient-info p i {
             margin-right: 8px;
-            color: var(--secondary);
+            color: var(--accent);
         }
 
         .patient-action {
             margin-left: auto;
             padding: 0.6rem 1.2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50px;
             color: white;
             font-size: 0.9rem;
             font-weight: 600;
@@ -686,7 +649,7 @@
 
         .patient-action:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(13, 74, 117, 0.3);
+            box-shadow: 0 5px 15px rgba(131, 56, 236, 0.3);
         }
 
         /* Calendar */
@@ -760,7 +723,7 @@
         }
 
         .calendar-date:hover {
-            background: rgba(13, 74, 117, 0.1);
+            background: rgba(58, 134, 255, 0.1);
             transform: scale(1.1);
         }
 
@@ -783,18 +746,18 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--secondary);
+            background: var(--accent);
         }
 
         /* Quick Actions */
         .quick-actions {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
         }
 
         .action-btn {
-            padding: 1.2rem;
+            padding: 1rem;
             border-radius: var(--border-radius);
             color: white;
             font-weight: 600;
@@ -804,26 +767,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            gap: 10px;
         }
 
         .action-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .action-btn.appointment {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
         }
 
         .action-btn.prescription {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            background: linear-gradient(135deg, var(--success), #2b9c72);
         }
 
         .action-btn.patient {
-            background: linear-gradient(135deg, #8a4fff, #6a35e0);
+            background: linear-gradient(135deg, var(--warning), #d4a62c);
         }
 
         /* Responsive */
@@ -845,6 +806,7 @@
             
             .sidebar .logo {
                 justify-content: center;
+                padding: 0 0.5rem 1rem;
             }
             
             .sidebar .nav-item {
@@ -859,10 +821,6 @@
             
             .main-content {
                 margin-left: 80px;
-            }
-            
-            .search-box input {
-                width: 200px;
             }
         }
 
@@ -905,42 +863,18 @@
             .stat-value {
                 font-size: 1.9rem;
             }
-            
-            .header-actions {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .search-box input {
-                width: 100%;
-            }
         }
         
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background: var(--success);
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            transform: translateX(120%);
-            transition: transform 0.5s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Correction du problème d'animation */
+        .dashboard-grid, .content-row {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
         
-        .notification.show {
-            transform: translateX(0);
+        .dashboard-grid.visible, .content-row.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -948,11 +882,7 @@
     <!-- Floating background elements -->
     <div class="floating-element element-1"></div>
     <div class="floating-element element-2"></div>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i> Action effectuée avec succès
-    </div>
+    <div class="floating-element element-3"></div>
 
     <div class="dashboard-container">
         <!-- Sidebar -->
@@ -1013,26 +943,33 @@
                         <input type="text" placeholder="Rechercher patient, rendez-vous...">
                     </div>
                     
-                    <div class="user-profile" onclick="toggleDropdown()">
-                        <div class="user-avatar">DM</div>
-                        <div class="user-info">
-                            <h4>Dr. David Martin</h4>
-                            <p>Cardiologue</p>
+                    <div class="user-profile-container">
+                        <div class="user-profile" onclick="toggleDropdown()">
+                            <div class="user-avatar">DM</div>
+                            <div class="user-info">
+                                <h4>Dr. David Martin</h4>
+                                <p>Cardiologue</p>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        <i class="fas fa-chevron-down"></i>
 
                         <div id="dropdownMenu" class="dropdown-menu">
                             <a href="#"><i class="fas fa-user"></i> Mon profil</a>
                             <a href="#"><i class="fas fa-cog"></i> Paramètres</a>
                             <a href="#"><i class="fas fa-bell"></i> Notifications</a>
-                            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button class="btn-logout" type="submit">
+                                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </header>
 
             <!-- Stats Dashboard -->
-            <div class="dashboard-grid">
+            <div class="dashboard-grid" id="dashboardGrid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Rendez-vous aujourd'hui</div>
@@ -1044,7 +981,7 @@
                     <div class="stat-change"><i class="fas fa-arrow-up"></i> +2 par rapport à hier</div>
                 </div>
                 
-                <div class="stat-card patients">
+                <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Nouveaux patients</div>
                         <div class="stat-icon">
@@ -1055,7 +992,7 @@
                     <div class="stat-change"><i class="fas fa-user-plus"></i> +1 cette semaine</div>
                 </div>
                 
-                <div class="stat-card earnings">
+                <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Revenus estimés</div>
                         <div class="stat-icon">
@@ -1066,7 +1003,7 @@
                     <div class="stat-change"><i class="fas fa-chart-line"></i> +15% ce mois</div>
                 </div>
                 
-                <div class="stat-card rating">
+                <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Satisfaction patients</div>
                         <div class="stat-icon">
@@ -1079,7 +1016,7 @@
             </div>
 
             <!-- Main Content Row -->
-            <div class="content-row">
+            <div class="content-row" id="contentRow">
                 <!-- Left Column -->
                 <div class="left-column">
                     <!-- Rendez-vous à venir -->
@@ -1271,36 +1208,18 @@
             // Animer les éléments au chargement
             gsap.registerPlugin(ScrollTrigger);
             
-            // Animer les statistiques
-            gsap.from('.stat-card', {
-                scrollTrigger: {
-                    trigger: '.dashboard-grid',
-                    start: 'top 50%'
-                },
-                y: 50,
-                opacity: 1,
-                stagger: 0.15,
-                duration: 0.2
-            });
-            
-            // Animer les cartes
-            gsap.from('.card', {
-                scrollTrigger: {
-                    trigger: '.content-row',
-                    start: 'top 85%'
-                },
-                y: 50,
-                opacity: 1,
-                stagger: 0.2,
-                duration: 0.8
-            });
+            // Rendre les éléments visibles après un court délai
+            setTimeout(function() {
+                document.getElementById('dashboardGrid').classList.add('visible');
+                document.getElementById('contentRow').classList.add('visible');
+            }, 300);
             
             // Animation des éléments au survol
             const cards = document.querySelectorAll('.card, .stat-card');
             cards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     gsap.to(this, {
-                        y: -8,
+                        y: -6,
                         duration: 0.4,
                         ease: "power2.out"
                     });
@@ -1324,7 +1243,7 @@
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
-            const profile = document.querySelector('.user-profile');
+            const profile = document.querySelector('.user-profile-container');
             const menu = document.getElementById('dropdownMenu');
             
             if (!profile.contains(event.target)) {
@@ -1356,14 +1275,21 @@
         // Logout function
         function logout() {
             // Show notification
-            const notification = document.getElementById('notification');
-            notification.textContent = "Vous avez été déconnecté avec succès";
-            notification.style.background = "var(--primary)";
-            notification.classList.add('show');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = '<i class="fas fa-check-circle"></i> Vous avez été déconnecté avec succès';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
             
             // Hide notification after 3 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
             }, 3000);
             
             // Simulate logout
@@ -1372,6 +1298,24 @@
             }, 500);
         }
         
+        // Appointment status animation
+        const statusItems = document.querySelectorAll('.appointment-status');
+        statusItems.forEach(status => {
+            status.addEventListener('mouseenter', function() {
+                gsap.to(this, {
+                    scale: 1.05,
+                    duration: 0.2
+                });
+            });
+            
+            status.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    scale: 1,
+                    duration: 0.2
+                });
+            });
+        });
+
         // Calendar navigation
         const calendarNavButtons = document.querySelectorAll('.calendar-nav button');
         calendarNavButtons.forEach(button => {
@@ -1388,13 +1332,21 @@
         const actionButtons = document.querySelectorAll('.action-btn');
         actionButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const notification = document.getElementById('notification');
-                notification.textContent = "Action effectuée avec succès";
-                notification.style.background = "var(--secondary)";
-                notification.classList.add('show');
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = '<i class="fas fa-check-circle"></i> Action effectuée avec succès';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
                 
                 setTimeout(() => {
                     notification.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 500);
                 }, 3000);
             });
         });

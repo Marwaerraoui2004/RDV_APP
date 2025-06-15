@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
     $user = Auth::user();
 
     // Redirection selon le rôle
-    if ($user->role === 'docteur') {
+    if ($user->role === 'doctor') {
         return redirect()->route('docteur.dashboard');
     } elseif ($user->role === 'patient') {
         return redirect()->route('patient.dashboard');
@@ -54,8 +54,7 @@ class AuthenticatedSessionController extends Controller
         return redirect('/login')->withErrors(['role' => 'Rôle non reconnu.']);
     }
 }
-
-
+    
 
     /**
      * Destroy an authenticated session.

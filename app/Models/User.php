@@ -43,20 +43,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Appointment::class, 'doctor_id');
     }
-      public function receivedRatings()
+     public function reviewsReceived()
     {
         return $this->hasMany(Rating::class, 'doctor_id');
     }
 
-    // A patient can give many ratings
-    public function givenRatings()
+    // Le patient peut écrire des avis
+    public function reviewsGiven()
     {
         return $this->hasMany(Rating::class, 'patient_id');
     }
-public function prescriptions()
-    {
-        return $this->hasMany(Prescription::class, 'patient_id');
-    }
+    public function prescriptions()
+        {
+            return $this->hasMany(Prescription::class, 'patient_id');
+        }
     public function doctors()
 {
     return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')

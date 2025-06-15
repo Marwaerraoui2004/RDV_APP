@@ -19,97 +19,103 @@ class DoctorController extends Controller
      * @return \Illuminate\View\View
      */
     public function dashboard(Request $request)
-    {
-        $doctor = Auth::user();
+{
+    $doctor = Auth::user();
 
-        if ($doctor->role !== 'doctor') {
-            return redirect('/')->with('error', 'Accès non autorisé.');
-        }
-
-        // Dashboard data retrieval (as in the previous response)
-        $today = Carbon::today();
-        $appointmentsToday = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                        ->whereDate('appointment_date', $today)
-                                        ->count();
-
-        $yesterday = Carbon::yesterday();
-        $appointmentsYesterday = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                            ->whereDate('appointment_date', $yesterday)
-                                            ->count();
-        $appointmentComparisonToday = $appointmentsToday - $appointmentsYesterday;
-
-
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $endOfWeek = Carbon::now()->endOfWeek();
-        $newPatientsThisWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                          ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-                                          ->distinct('patient_id')
-                                          ->count();
-        $startLastWeek = Carbon::now()->subWeek()->startOfWeek();
-        $endLastWeek = Carbon::now()->subWeek()->endOfWeek();
-        $newPatientsLastWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                          ->whereBetween('created_at', [$startLastWeek, $endLastWeek])
-                                          ->distinct('patient_id')
-                                          ->count();
-        $newPatientsComparisonWeek = $newPatientsThisWeek - $newPatientsLastWeek;
-
-
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
-        $estimatedRevenueThisMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                                ->where('status', 'completed')
-                                                ->whereBetween('appointment_date', [$startOfMonth, $endOfMonth])
-                                                ->sum('cost');
-
-        $startLastMonth = Carbon::now()->subMonth()->startOfMonth();
-        $endLastMonth = Carbon::now()->subMonth()->endOfMonth();
-        $estimatedRevenueLastMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                                ->where('status', 'completed')
-                                                ->whereBetween('appointment_date', [$startLastMonth, $endLastMonth])
-                                                ->sum('cost');
-        $revenueComparisonMonth = ($estimatedRevenueLastMonth > 0) ?
-                                  (($estimatedRevenueThisMonth - $estimatedRevenueLastMonth) / $estimatedRevenueLastMonth) * 100
-                                  : ($estimatedRevenueThisMonth > 0 ? 100 : 0);
-
-
-        $startOfQuarter = Carbon::now()->subMonths(3)->startOfMonth();
-        $endOfQuarter = Carbon::now()->endOfMonth();
-        $currentQuarterRatings = Rating::where('doctor_id', $doctor->id)
-                                       ->whereBetween('created_at', [$startOfQuarter, $endOfQuarter])
-                                       ->avg('rating');
-        $currentQuarterRatings = round($currentQuarterRatings, 1);
-
-        $startOfPreviousQuarter = Carbon::now()->subMonths(6)->startOfMonth();
-        $endOfPreviousQuarter = Carbon::now()->subMonths(3)->endOfMonth();
-        $previousQuarterRatings = Rating::where('doctor_id', $doctor->id)
-                                        ->whereBetween('created_at', [$startOfPreviousQuarter, $endOfPreviousQuarter])
-                                        ->avg('rating');
-        $previousQuarterRatings = round($previousQuarterRatings, 1);
-        $satisfactionComparisonQuarter = $currentQuarterRatings - $previousQuarterRatings;
-
-
-        $upcomingAppointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
-                                          ->where('appointment_date', '>=', $today)
-                                          ->whereIn('status', ['pending', 'confirmed'])
-                                          ->orderBy('appointment_date')
-                                          ->orderBy('appointment_time')
-                                          ->limit(5)
-                                          ->with('patient')
-                                          ->get();
-
-        return view('pages.docteur', [
-            'doctor' => $doctor,
-            'appointmentsToday' => $appointmentsToday,
-            'appointmentComparisonToday' => $appointmentComparisonToday,
-            'newPatientsThisWeek' => $newPatientsThisWeek,
-            'newPatientsComparisonWeek' => $newPatientsComparisonWeek,
-            'estimatedRevenueThisMonth' => $estimatedRevenueThisMonth,
-            'revenueComparisonMonth' => $revenueComparisonMonth,
-            'patientSatisfaction' => $currentQuarterRatings,
-            'satisfactionComparisonQuarter' => $satisfactionComparisonQuarter,
-            'upcomingAppointments' => $upcomingAppointments,
-        ]);
+    if ($doctor->role !== 'doctor') {
+        return redirect('/')->with('error', 'Accès non autorisé.');
     }
+
+    $today = Carbon::today();
+    $appointmentsToday = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                ->whereDate('appointment_datetime', $today)
+                                ->count();
+
+    $yesterday = Carbon::yesterday();
+    $appointmentsYesterday = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                    ->whereDate('appointment_datetime', $yesterday)
+                                    ->count();
+
+    $appointmentComparisonToday = $appointmentsToday - $appointmentsYesterday;
+
+    $startOfWeek = Carbon::now()->startOfWeek();
+    $endOfWeek = Carbon::now()->endOfWeek();
+
+    $newPatientsThisWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                  ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                                  ->distinct()
+                                  ->count('patient_id');
+
+    $startLastWeek = Carbon::now()->subWeek()->startOfWeek();
+    $endLastWeek = Carbon::now()->subWeek()->endOfWeek();
+
+    $newPatientsLastWeek = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                  ->whereBetween('created_at', [$startLastWeek, $endLastWeek])
+                                  ->distinct()
+                                  ->count('patient_id');
+
+    $newPatientsComparisonWeek = $newPatientsThisWeek - $newPatientsLastWeek;
+
+    $startOfMonth = Carbon::now()->startOfMonth();
+    $endOfMonth = Carbon::now()->endOfMonth();
+
+    $estimatedRevenueThisMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                    ->where('status', 'completed')
+                                    ->whereBetween('appointment_datetime', [$startOfMonth, $endOfMonth])
+                                    ->sum('cost');
+
+    $startLastMonth = Carbon::now()->subMonth()->startOfMonth();
+    $endLastMonth = Carbon::now()->subMonth()->endOfMonth();
+
+    $estimatedRevenueLastMonth = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                    ->where('status', 'completed')
+                                    ->whereBetween('appointment_datetime', [$startLastMonth, $endLastMonth])
+                                    ->sum('cost');
+
+    $revenueComparisonMonth = ($estimatedRevenueLastMonth > 0)
+        ? (($estimatedRevenueThisMonth - $estimatedRevenueLastMonth) / $estimatedRevenueLastMonth) * 100
+        : ($estimatedRevenueThisMonth > 0 ? 100 : 0);
+
+    $startOfQuarter = Carbon::now()->subMonths(3)->startOfMonth();
+    $endOfQuarter = Carbon::now()->endOfMonth();
+
+    $currentQuarterRatings = Rating::where('doctor_id', $doctor->id)
+                                ->whereBetween('created_at', [$startOfQuarter, $endOfQuarter])
+                                ->avg('rating');
+    $currentQuarterRatings = $currentQuarterRatings ? round($currentQuarterRatings, 1) : 0;
+
+    $startOfPreviousQuarter = Carbon::now()->subMonths(6)->startOfMonth();
+    $endOfPreviousQuarter = Carbon::now()->subMonths(3)->endOfMonth();
+
+    $previousQuarterRatings = Rating::where('doctor_id', $doctor->id)
+                                ->whereBetween('created_at', [$startOfPreviousQuarter, $endOfPreviousQuarter])
+                                ->avg('rating');
+    $previousQuarterRatings = $previousQuarterRatings ? round($previousQuarterRatings, 1) : 0;
+
+    $satisfactionComparisonQuarter = $currentQuarterRatings - $previousQuarterRatings;
+
+    $upcomingAppointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
+                                    ->where('appointment_datetime', '>=', $today)
+                                    ->whereIn('status', ['pending', 'confirmed'])
+                                    ->orderBy('appointment_datetime')
+                                    ->limit(5)
+                                    ->with('patient')
+                                    ->get();
+
+    return view('pages.docteur', [
+        'doctor' => $doctor,
+        'appointmentsToday' => $appointmentsToday,
+        'appointmentComparisonToday' => $appointmentComparisonToday,
+        'newPatientsThisWeek' => $newPatientsThisWeek,
+        'newPatientsComparisonWeek' => $newPatientsComparisonWeek,
+        'estimatedRevenueThisMonth' => $estimatedRevenueThisMonth,
+        'revenueComparisonMonth' => $revenueComparisonMonth,
+        'patientSatisfaction' => $currentQuarterRatings,
+        'satisfactionComparisonQuarter' => $satisfactionComparisonQuarter,
+        'upcomingAppointments' => $upcomingAppointments,
+    ]);
+}
+
 
     /**
      * Display a list of all appointments for the doctor.

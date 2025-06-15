@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade'); // Who received the rating
             $table->foreignId('patient_id')->constrained('users')->onDelete('cascade'); // Who gave the rating
-            $table->float('rating', 2, 1); // e.g., 4.5
+            $table->float('rating', 2,1); // e.g., 4.5
             $table->text('comment')->nullable();
             $table->timestamps();
         });

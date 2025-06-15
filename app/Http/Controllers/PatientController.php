@@ -5,7 +5,7 @@ use App\Models\Appointment;
 use App\Models\Document;
 use App\Models\Indicateur;
 use App\Models\User;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -20,9 +20,9 @@ class PatientController extends Controller{
 
     // Rendez-vous à venir
     $upcomingAppointments = Appointment::where('patient_id', $user->id)
-        ->whereDate('appointment_date', '>=', $today)
-        ->orderBy('appointment_date')
-        ->get();
+    ->whereDate('appointment_datetime', '>=', $today)  // Filtre sur la date seulement (ignore l'heure)
+    ->orderBy('appointment_datetime')                  // Trie par date + heure
+    ->get();
 
     $countUpcoming = $upcomingAppointments->count();
     $nextAppointment = $upcomingAppointments->first();
@@ -40,8 +40,8 @@ class PatientController extends Controller{
 
     // Dernière consultation passée
     $lastAppointment = Appointment::where('patient_id', $user->id)
-        ->whereDate('appointment_date', '<', $today)
-        ->orderBy('appointment_date', 'desc')
+        ->whereDate('appointment_datetime', '<', $today)
+        ->orderBy('appointment_datetime', 'desc')
         ->first();
     $indicateurs = Indicateur::where('user_id', auth()->id())->get();
     $daysSinceLast = $lastAppointment
@@ -56,8 +56,8 @@ class PatientController extends Controller{
     $countDocuments = $documents->count();
     $lastDocDate = $documents->first()?->created_at;
     $nextAppointmentsList = Appointment::where('patient_id', $user->id)
-    ->whereDate('appointment_date', '>=', $today)
-    ->orderBy('appointment_date')
+    ->whereDate('appointment_datetime', '>=', $today)
+    ->orderBy('appointment_datetime')
     ->take(5)
     ->get();
      $mesMedecins = User::whereHas('doctorAppointments', function ($query) use ($userId) {
@@ -76,19 +76,49 @@ class PatientController extends Controller{
         'nextAppointmentsList',
         'mesMedecins',
         'indicateurs',
+        'documents'
     ));
 }
-    public function contacter($id)
-    {
-        $medecin = User::findOrFail($id);
-        return view('patients.contacter', compact('medecin'));
-    }
 
     // 2. Mes rendez-vous
-    public function appointments()
+   public function appointments()
     {
-        return view('patients.appointments');
+        $appointments = Appointment::where('patient_id', Auth::id())
+            ->orderBy('appointment_datetime', 'desc')  // Attention : selon ta migration, tu as date ET heure séparés
+            ->orderBy('appointment_datetime', 'desc')
+            ->get();
+
+        return view('patients.appointments', compact('appointments'));
     }
+    public function create()
+    {
+        $doctors = User::where('role', 'doctor')
+            ->select('id', 'name', 'specialty')
+            ->withAvg('reviewsReceived', 'rating') // Laravel 9+ uniquement
+            ->get();
+
+        return view('patients.create_appointment', compact('doctors'));
+    }    
+    public function store(Request $request)
+    {
+        $request->validate([
+            'doctor_id' => 'required|exists:users,id',
+            'appointment_datetime' => 'required|date|after:now',
+            'notes' => 'nullable|string',
+        ]);
+
+        Appointment::create([
+            'patient_id' => auth()->id(),
+            'doctor_id' => $request->doctor_id,
+            'appointment_datetime' => $request->appointment_datetime,
+            'notes' => $request->notes,
+            'status' => 'en attente',
+        ]);
+
+        return redirect()->route('patient.dashboard')->with('success', 'Votre demande de rendez-vous a été envoyée.');
+    }
+
+    
 
     // 3. Mes médecins
     public function mydoctors()
@@ -150,4 +180,9 @@ class PatientController extends Controller{
 
     return view('pages.resultats', compact('medecins', 'rendezvous', 'query'));
 }
+public function contact()
+{
+    return view('patient.contact'); // ou la vue que tu souhaites afficher
+}
+
 }

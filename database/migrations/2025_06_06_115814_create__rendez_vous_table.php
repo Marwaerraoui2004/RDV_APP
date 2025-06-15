@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
-            $table->date('appointment_date');
-            $table->time('appointment_time');
+            $table->dateTime('appointment_datetime');
             $table->enum('status', ['en attente', 'confirmé', 'annulé'])->default('en attente');
             $table->text('notes')->nullable();
             $table->timestamps();
         });
+
 
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_rendez_vous');
+        Schema::dropIfExists('appointments');
     }
 };

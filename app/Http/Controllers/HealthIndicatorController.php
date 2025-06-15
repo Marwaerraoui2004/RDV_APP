@@ -28,7 +28,7 @@ class HealthIndicatorController extends Controller
         $user = Auth::user();
         $user->update($request->only('tension_arterielle', 'frequence_cardiaque', 'glycemie', 'imc'));
 
-        return redirect()->route('dashboard')->with('success', 'Indicateurs mis à jour !');
+        return redirect()->route('patient.dashboard')->with('success', 'Indicateurs mis à jour !');
     }
 }
 
