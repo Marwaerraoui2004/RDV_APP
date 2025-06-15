@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord Médecin - MediConnect</title>
+    <title>Espace Médecin - MediConnect</title>
+    
+    <!-- Assets -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
-    <style>
+    
+    <!-- Styles -->
+     <style>
         :root {
             --primary: #3a86ff;
             --primary-dark: #2667cc;
@@ -885,43 +896,47 @@
     <div class="floating-element element-3"></div>
 
     <div class="dashboard-container">
-        <!-- Sidebar -->
+        <!-- Sidebar Médecin -->
         <aside class="sidebar">
             <div class="logo">
-                <i class="fas fa-heartbeat"></i>
+                <i class="fas fa-user-md"></i>
                 <h1>MediConnect</h1>
             </div>
             
             <nav>
-                <a href="#" class="nav-item active">
+                <a href="{{ route('docteur.dashboard') }}" class="nav-item {{ request()->routeIs('docteur.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home"></i>
                     <span>Tableau de bord</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('docteur.rendezvous.index') }}" class="nav-item {{ request()->routeIs('docteur.rendezvous.index') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check"></i>
-                    <span>Rendez-vous</span>
+                    <span>Mes rendez-vous</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-user-injured"></i>
-                    <span>Patients</span>
+                <a href="{{ route('docteur.patients') }}" class="nav-item {{ request()->routeIs('docteur.patients') ? 'active' : '' }}">
+                    <i class="fas fa-procedures"></i>
+                    <span>Mes patients</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('docteur.documents.index') }}" class="nav-item {{ request()->routeIs('docteur.documents.index') ? 'active' : '' }}">
                     <i class="fas fa-file-medical"></i>
-                    <span>Dossiers</span>
+                    <span>Documents médicaux</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-prescription"></i>
-                    <span>Ordonnances</span>
+                <a href="{{ route('docteur.messagerie') }}" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>Messagerie</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Statistiques</span>
-                </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('docteur.parametres') }}" class="nav-item">
                     <i class="fas fa-cog"></i>
                     <span>Paramètres</span>
                 </a>
-                <a href="#" class="nav-item">
+                 <a href="{{ route('docteur.prescription') }}" class="nav-item">
+                    <i class="fas fa-prescription"></i>
+                    <span>Ordonnances</span>
+                </a>
+                 <a href="#" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Statistiques</span>
+                </a>
+                 <a href="#" class="nav-item">
                     <i class="fas fa-question-circle"></i>
                     <span>Aide & Support</span>
                 </a>
@@ -933,30 +948,32 @@
             <!-- Header -->
             <header class="header">
                 <div class="header-title">
-                    <h2>Tableau de bord</h2>
-                    <p>Bon retour, Dr. Martin. Voici votre activité aujourd'hui</p>
+                    <h2>Mon Espace Médecin</h2>
+                    <p>Bonjour Dr. {{Auth::user()->name}}, voici votre tableau de bord</p>
                 </div>
                 
                 <div class="header-actions">
-                    <div class="search-box">
+                    <form action="{{ route('docteur.recherche') }}" method="GET" class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Rechercher patient, rendez-vous...">
-                    </div>
+                        <input type="text" name="q" placeholder="Rechercher patient, rendez-vous...">
+                    </form>
                     
                     <div class="user-profile-container">
                         <div class="user-profile" onclick="toggleDropdown()">
-                            <div class="user-avatar">DM</div>
+                            <div class="user-avatar">
+                                Dr. {{ substr(Auth::user()->name, 0, 1) }}{{ substr(Str::after(Auth::user()->name, ' '), 0, 1) }}
+                            </div>
                             <div class="user-info">
-                                <h4>Dr. David Martin</h4>
-                                <p>Cardiologue</p>
+                                <h4>Dr. {{Auth::user()->name}}</h4>
+                                <p>{{Auth::user()->specialty}}</p>
                             </div>
                             <i class="fas fa-chevron-down"></i>
                         </div>
 
                         <div id="dropdownMenu" class="dropdown-menu">
-                            <a href="#"><i class="fas fa-user"></i> Mon profil</a>
-                            <a href="#"><i class="fas fa-cog"></i> Paramètres</a>
-                            <a href="#"><i class="fas fa-bell"></i> Notifications</a>
+                            <a href="{{route('profile.update')}}"><i class="fas fa-user"></i> Mon profil</a>
+                            <a href="{{route('docteur.parametres')}}"><i class="fas fa-cog"></i> Paramètres</a>
+                            <a href="#"><i class="fas fa-question-circle"></i> Aide</a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button class="btn-logout" type="submit">
@@ -970,48 +987,77 @@
 
             <!-- Stats Dashboard -->
             <div class="dashboard-grid" id="dashboardGrid">
+                <!-- Carte des rendez-vous -->
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Rendez-vous aujourd'hui</div>
                         <div class="stat-icon">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-calendar-day"></i>
                         </div>
                     </div>
-                    <div class="stat-value">8</div>
-                    <div class="stat-change"><i class="fas fa-arrow-up"></i> +2 par rapport à hier</div>
+                    <div class="stat-value">{{ $countUpcoming }}</div>
+                    @if ($nextAppointmentsList->count() > 0)
+                        <div class="stat-change">
+                            <i class="fas fa-clock"></i>
+                            Prochain à {{ \Carbon\Carbon::parse($nextAppointment->appointment_datetime)->format('H:i') }}
+                        </div>
+                    @else
+                        <div class="stat-change">Aucun rendez-vous aujourd'hui</div>
+                    @endif
                 </div>
-                
+
+                <!-- Patients suivis -->
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-title">Nouveaux patients</div>
+                        <div class="stat-title">Patients suivis</div>
                         <div class="stat-icon">
-                            <i class="fas fa-user-plus"></i>
+                            <i class="fas fa-procedures"></i>
                         </div>
                     </div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-change"><i class="fas fa-user-plus"></i> +1 cette semaine</div>
+                    <div class="stat-value">{{ $countPatients }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-user-plus"></i>
+                        @if($lastPatient)
+                            Dernier : {{ $lastPatient }}
+                        @else
+                            Aucun patient
+                        @endif
+                    </div>
                 </div>
-                
+
+                <!-- Dernière consultation -->
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-title">Revenus estimés</div>
+                        <div class="stat-title">Dernière consultation</div>
                         <div class="stat-icon">
-                            <i class="fas fa-euro-sign"></i>
+                            <i class="fas fa-stethoscope"></i>
                         </div>
                     </div>
-                    <div class="stat-value">1,240€</div>
-                    <div class="stat-change"><i class="fas fa-chart-line"></i> +15% ce mois</div>
+                    <div class="stat-value">
+                        {{ $daysSinceLast !== null ? $daysSinceLast . ' jours' : 'Aucune' }}
+                    </div>
+                    <div class="stat-change">
+                        <i class="fas fa-calendar-check"></i> {{ $lastAppointment ? 'Avec ' . optional($lastAppointment->patient)->name : '' }}
+                    </div>
                 </div>
-                
+
+                <!-- Documents créés -->
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-title">Satisfaction patients</div>
+                        <div class="stat-title">Documents créés</div>
                         <div class="stat-icon">
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-file-medical-alt"></i>
                         </div>
                     </div>
-                    <div class="stat-value">4.8/5</div>
-                    <div class="stat-change"><i class="fas fa-star"></i> +0.2 ce trimestre</div>
+                    <div class="stat-value">{{ $countDocuments }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-history"></i>
+                        @if($lastDocDate)
+                            Dernier : {{ $lastDocDate->diffForHumans() }}
+                        @else
+                            Aucun document
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -1022,107 +1068,117 @@
                     <!-- Rendez-vous à venir -->
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Prochains rendez-vous</div>
-                            <div class="card-action">Voir tout <i class="fas fa-arrow-right"></i></div>
+                            <div class="card-title">Mes prochains rendez-vous</div>
+                            <div class="card-action"><a href="{{ route('docteur.rendezvous.index') }}">Voir tout</a></div>
                         </div>
-                        <div class="card-body">
-                            <ul class="appointment-list">
-                                <li class="appointment-item">
-                                    <div class="appointment-time">
-                                        <div class="time">09:30</div>
-                                        <div class="date">Aujourd'hui</div>
-                                    </div>
-                                    <div class="appointment-info">
-                                        <h4>Marie Dupont</h4>
-                                        <p><i class="fas fa-stethoscope"></i> Consultation de suivi</p>
-                                        <span class="appointment-status status-confirmed">Confirmé</span>
-                                    </div>
-                                </li>
-                                <li class="appointment-item">
-                                    <div class="appointment-time">
-                                        <div class="time">11:15</div>
-                                        <div class="date">Aujourd'hui</div>
-                                    </div>
-                                    <div class="appointment-info">
-                                        <h4>Jean Lefebvre</h4>
-                                        <p><i class="fas fa-heartbeat"></i> Examen cardiologique</p>
-                                        <span class="appointment-status status-confirmed">Confirmé</span>
-                                    </div>
-                                </li>
-                                <li class="appointment-item">
-                                    <div class="appointment-time">
-                                        <div class="time">14:00</div>
-                                        <div class="date">Aujourd'hui</div>
-                                    </div>
-                                    <div class="appointment-info">
-                                        <h4>Sophie Bernard</h4>
-                                        <p><i class="fas fa-file-medical"></i> Premier rendez-vous</p>
-                                        <span class="appointment-status status-pending">En attente</span>
-                                    </div>
-                                </li>
-                                <li class="appointment-item">
-                                    <div class="appointment-time">
-                                        <div class="time">16:45</div>
-                                        <div class="date">Aujourd'hui</div>
-                                    </div>
-                                    <div class="appointment-info">
-                                        <h4>Robert Martin</h4>
-                                        <p><i class="fas fa-prescription-bottle"></i> Renouvellement ordonnance</p>
-                                        <span class="appointment-status status-confirmed">Confirmé</span>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="card-body card-body-scrollable">
+                            <div class="scrollable-container">
+                                <ul class="appointment-list">
+                                    @forelse ($nextAppointmentsList as $appointment)
+                                    <li class="appointment-item">
+                                        <div class="appointment-time">
+                                            <div class="time">{{ \Carbon\Carbon::parse($appointment->appointment_datetime)->format('H:i') }}</div>
+                                            <div class="date">{{ \Carbon\Carbon::parse($appointment->appointment_datetime)->translatedFormat('D d M') }}</div>
+                                        </div>
+                                        <div class="appointment-info">
+                                            <h4>{{ optional($appointment->patient)->name ?? 'Patient inconnu' }}</h4>
+                                            <p><i class="fas fa-info-circle"></i> {{ $appointment->notes ? Str::limit($appointment->notes, 30) : 'Aucune note' }}</p>
+                                            <span class="appointment-status status-{{ $appointment->status }}">
+                                                {{ ucfirst($appointment->status) }}
+                                            </span>
+                                        </div>
+                                        <a href="{{ route('docteur.rendezvous.gerer', $appointment->id) }}" class="doctor-action">Gérer</a>
+                                    </li>
+                                    @empty
+                                        <li class="appointment-item">
+                                            <p>Aucun rendez-vous à venir.</p>
+                                        </li>
+                                    @endforelse        
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Patients récents -->
+                    <!-- Mes patients récents -->
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Patients récents</div>
-                            <div class="card-action">Voir tout <i class="fas fa-arrow-right"></i></div>
+                            <div class="card-title">Mes patients récents</div>
+                            <div class="card-action"><a href="{{ route('docteur.patients') }}">Tous voir</a></div>
                         </div>
-                        <div class="card-body">
-                            <ul class="patient-list">
-                                <li class="patient-item">
-                                    <div class="patient-avatar">SD</div>
-                                    <div class="patient-info">
-                                        <h4>Sarah Dubois</h4>
-                                        <p><i class="fas fa-phone"></i> +33 6 12 34 56 78</p>
-                                    </div>
-                                    <button class="patient-action">Dossier</button>
-                                </li>
-                                <li class="patient-item">
-                                    <div class="patient-avatar">TL</div>
-                                    <div class="patient-info">
-                                        <h4>Thomas Lambert</h4>
-                                        <p><i class="fas fa-envelope"></i> thomas.l@example.com</p>
-                                    </div>
-                                    <button class="patient-action">Dossier</button>
-                                </li>
-                                <li class="patient-item">
-                                    <div class="patient-avatar">CG</div>
-                                    <div class="patient-info">
-                                        <h4>Chloé Girard</h4>
-                                        <p><i class="fas fa-map-marker-alt"></i> Paris, France</p>
-                                    </div>
-                                    <button class="patient-action">Dossier</button>
-                                </li>
-                                <li class="patient-item">
-                                    <div class="patient-avatar">PM</div>
-                                    <div class="patient-info">
-                                        <h4>Pierre Moreau</h4>
-                                        <p><i class="fas fa-birthday-cake"></i> 15/03/1975</p>
-                                    </div>
-                                    <button class="patient-action">Dossier</button>
-                                </li>
-                            </ul>
+                        <div class="card-body card-body-scrollable">
+                            <div class="scrollable-container">
+                                <ul class="doctor-list">
+                                    @forelse ($mesPatients as $patient)
+                                    <li class="doctor-item">
+                                        <div class="doctor-avatar">
+                                            {{ strtoupper(substr($patient->name, 0, 1)) }}{{ strtoupper(substr(Str::after($patient->name, ' '), 0, 1)) }}
+                                        </div>
+                                        <div class="doctor-info">
+                                            <h4>{{ $patient->name }}</h4>
+                                            <p><i class="fas fa-birthday-cake"></i> {{ $patient->age }} ans</p>
+                                            <p><i class="fas fa-phone"></i> {{ $patient->phone ?? 'Non renseigné' }}</p>
+                                        </div>
+                                        <a href="{{ route('docteur.messagerie') }}?patient_id={{ $patient->id }}" class="doctor-action">Contacter</a>
+                                    </li>
+                                    @empty
+                                        <li class="doctor-item">
+                                            <p>Aucun patient récent.</p>
+                                        </li>
+                                    @endforelse
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Right Column -->
                 <div class="right-column">
-                    <!-- Calendrier -->
+                    <!-- Derniers documents créés -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Mes derniers documents</div>
+                            <a href="{{ route('docteur.documents.creer') }}" class="card-action">Créer</a>
+                        </div>
+                        <div class="card-body card-body-scrollable">
+                            <div class="scrollable-container">
+                                <ul class="documents-list">
+                                    @forelse($documents as $document)
+                                    <li class="document-item">
+                                        <div class="document-icon">
+                                            @if($document->type === 'ordonnance')
+                                                <i class="fas fa-prescription"></i>
+                                            @elseif($document->type === 'compte-rendu')
+                                                <i class="fas fa-file-medical-alt"></i>
+                                            @elseif($document->type === 'bilan')
+                                                <i class="fas fa-chart-line"></i>
+                                            @else
+                                                <i class="fas fa-file"></i>
+                                            @endif
+                                        </div>
+                                        <div class="document-info">
+                                            <h4>{{ $document->title }}</h4>
+                                            <p>Pour {{ optional($document->patient)->name ?? 'Patient inconnu' }}</p>
+                                            <p>Créé le {{ $document->created_at->format('d/m/Y') }}</p>
+                                        </div>
+                                        <div>
+                                            <a href="{{ Storage::url($document->file_path) }}" class="document-action" title="Télécharger" download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <a href="{{ route('docteur.documents.edit', $document->id) }}" class="document-action" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    @empty
+                                        <li class="document-item">
+                                            <p>Aucun document créé récemment.</p>
+                                        </li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                      <!-- Calendrier -->
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Calendrier</div>
@@ -1178,8 +1234,7 @@
                         </div>
                     </div>
                     
-                    <!-- Actions rapides -->
-                    <div class="card">
+                   <div class="card">
                         <div class="card-header">
                             <div class="card-title">Actions rapides</div>
                         </div>
@@ -1189,11 +1244,40 @@
                                     <i class="fas fa-plus"></i> Nouveau rendez-vous
                                 </button>
                                 <button class="action-btn prescription">
-                                    <i class="fas fa-file-medical"></i> Créer une ordonnance
+                                    <a href="{{ route('prescriptions.create') }}" >
+                                         <i class="fas fa-file-medical"></i> Créer une ordonnance </a>
                                 </button>
                                 <button class="action-btn patient">
                                     <i class="fas fa-user-plus"></i> Ajouter un patient
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Statistiques rapides -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Statistiques</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="health-indicators">
+                                <div class="indicator-card">
+                                    <div class="indicator-title">RDV cette semaine</div>
+                                    <div class="indicator-value">{{ $weeklyAppointments ?? 0 }}</div>
+                                    <div class="indicator-range">
+                                        <div class="indicator-progress" style="width: {{ min(100, (($weeklyAppointments ?? 0) / 20) * 100) }}%"></div>
+                                    </div>
+                                    <div class="indicator-info">
+                                        {{ ($weeklyAppointments ?? 0) > 15 ? 'Charge élevée' : (($weeklyAppointments ?? 0) > 8 ? 'Charge normale' : 'Disponible') }}
+                                    </div>
+                                </div>
+                                <div class="indicator-card">
+                                    <div class="indicator-title">Nouveaux patients</div>
+                                    <div class="indicator-value">{{ $newPatientsThisMonth ?? 0 }}</div>
+                                    <div class="indicator-range">
+                                        <div class="indicator-progress" style="width: {{ min(100, (($newPatientsThisMonth ?? 0) / 10) * 100) }}%"></div>
+                                    </div>
+                                    <div class="indicator-info">Ce mois-ci</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1203,153 +1287,31 @@
     </div>
 
     <script>
-        // GSAP Animations
         document.addEventListener('DOMContentLoaded', function() {
-            // Animer les éléments au chargement
-            gsap.registerPlugin(ScrollTrigger);
-            
-            // Rendre les éléments visibles après un court délai
+            // Animation pour les éléments du dashboard
             setTimeout(function() {
                 document.getElementById('dashboardGrid').classList.add('visible');
                 document.getElementById('contentRow').classList.add('visible');
             }, 300);
-            
-            // Animation des éléments au survol
-            const cards = document.querySelectorAll('.card, .stat-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    gsap.to(this, {
-                        y: -6,
-                        duration: 0.4,
-                        ease: "power2.out"
-                    });
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    gsap.to(this, {
-                        y: 0,
-                        duration: 0.4,
-                        ease: "power2.out"
-                    });
-                });
-            });
         });
 
-        // Toggle dropdown menu
         function toggleDropdown() {
             const menu = document.getElementById('dropdownMenu');
             menu.classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const profile = document.querySelector('.user-profile-container');
-            const menu = document.getElementById('dropdownMenu');
-            
-            if (!profile.contains(event.target)) {
-                menu.classList.remove('show');
+        // Fermer le dropdown si on clique ailleurs
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-profile')) {
+                const dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
             }
-        });
-        
-        // Navigation items animation
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all items
-                navItems.forEach(i => i.classList.remove('active'));
-                
-                // Add active class to clicked item
-                this.classList.add('active');
-                
-                // Animation
-                gsap.from(this, {
-                    scale: 0.95,
-                    duration: 0.3,
-                    ease: "back.out(1.7)"
-                });
-            });
-        });
-        
-        // Logout function
-        function logout() {
-            // Show notification
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = '<i class="fas fa-check-circle"></i> Vous avez été déconnecté avec succès';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            // Hide notification after 3 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 500);
-            }, 3000);
-            
-            // Simulate logout
-            setTimeout(() => {
-                alert('Vous avez été déconnecté avec succès. Redirection vers la page de connexion...');
-            }, 500);
         }
-        
-        // Appointment status animation
-        const statusItems = document.querySelectorAll('.appointment-status');
-        statusItems.forEach(status => {
-            status.addEventListener('mouseenter', function() {
-                gsap.to(this, {
-                    scale: 1.05,
-                    duration: 0.2
-                });
-            });
-            
-            status.addEventListener('mouseleave', function() {
-                gsap.to(this, {
-                    scale: 1,
-                    duration: 0.2
-                });
-            });
-        });
-
-        // Calendar navigation
-        const calendarNavButtons = document.querySelectorAll('.calendar-nav button');
-        calendarNavButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                gsap.from('.calendar-grid', {
-                    opacity: 0,
-                    x: this.classList.contains('prev') ? -20 : 20,
-                    duration: 0.3
-                });
-            });
-        });
-        
-        // Quick action buttons
-        const actionButtons = document.querySelectorAll('.action-btn');
-        actionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Show notification
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.innerHTML = '<i class="fas fa-check-circle"></i> Action effectuée avec succès';
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    notification.classList.add('show');
-                }, 100);
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 500);
-                }, 3000);
-            });
-        });
     </script>
 </body>
 </html>
