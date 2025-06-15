@@ -1379,6 +1379,7 @@
                                 <div class="action-btn appointment">
                                     <i class="fas fa-calendar-plus"></i>
                                     <a href="{{ route('patient.appointments.create') }}" style="text-decoration: none; color: inherit;">Prendre rendez-vous</a>
+                                
                                 </div>
                                 <div class="action-btn advice">
                                     <i class="fas fa-comment-medical"></i> 

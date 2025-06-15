@@ -94,32 +94,25 @@ $daysSinceLast = $lastAppointment
         ));
     }
 
-    // 2. Mes rendez-vous
-   public function appointments()
+    public function appointments()
 {
-    $appointments = Appointment::where('doctor_id', Auth::id())
+    $appointments = Appointment::with(['patient'])
+        ->where('doctor_id', Auth::id())
         ->orderBy('appointment_datetime', 'desc')
         ->get();
 
-    // Add 'pages.' to the view path
-    return view('pages.docteurs.appointments', compact('appointments'));
-}
+    $managedAppointment = request('manage') 
+        ? Appointment::find(request('manage'))
+        : null;
 
-    // 3. Gestion des rendez-vous
-    // Gérer un rendez-vous
-public function manageAppointment($id)
-{
-    $appointment = Appointment::with(['patient', 'doctor'])
-        ->where('doctor_id', Auth::id())
-        ->findOrFail($id);
-
-    return view('pages.docteurs.manage_appointment', [
-        'appointment' => $appointment,
+    return view('pages.docteurs.appointments', [
+        'appointments' => $appointments,
+        'managedAppointment' => $managedAppointment,
         'availableStatuses' => ['accepté', 'refusé', 'en attente']
     ]);
 }
 
-// Mettre à jour le statut d'un rendez-vous
+
 public function updateAppointmentStatus(Request $request, $id)
 {
     $validated = $request->validate([
@@ -130,19 +123,23 @@ public function updateAppointmentStatus(Request $request, $id)
     $appointment = Appointment::where('doctor_id', Auth::id())
         ->findOrFail($id);
 
-    // Historisation avant modification
-    $oldStatus = $appointment->status;
-    
     $appointment->update([
         'status' => $validated['status'],
         'reason' => $validated['reason'] ?? null,
         'status_changed_at' => now()
     ]);
 
-    // Notification selon le statut
-    
+    return redirect()->route('docteur.rendezvous.index')
+        ->with('success', 'Statut mis à jour');
 }
+public function manageAppointment(Request $request)
+{
+    // Your appointment management logic here
+    // Example: Process form data, update database, etc.
 
+    // Redirect back with a success message
+    return back()->with('success', 'Appointment managed successfully!');
+}
 
     // 5. Mes patients
     public function myPatients()
@@ -211,7 +208,7 @@ public function updateAppointmentStatus(Request $request, $id)
     public function listPrescriptions()
 {
     $prescriptions = Prescription::with(['patient' => function($query) {
-            $query->select('id', 'name', 'age', 'phone');
+            $query->select('id', 'name',  'phone');
         }])
         ->where('doctor_id', auth()->id())
         ->orderBy('created_at', 'desc')

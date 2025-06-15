@@ -443,22 +443,15 @@
                             @endif
                             
                             <div class="prescription-actions">
-                                <a href="{{ route('prescriptions.show', $prescription->id) }}" class="action-btn view-btn">
-                                    <i class="fas fa-eye"></i> Voir
-                                </a>
                                 
-                                <a href="{{ route('prescriptions.download', $prescription->id) }}" class="action-btn download-btn">
-                                    <i class="fas fa-download"></i> Télécharger
-                                </a>
+                                
+                               
                             </div>
                         </div>
                     @endforeach
                 </div>
                 
-                <!-- Pagination -->
-                <div class="mt-6">
-                    {{ $prescriptions->links() }}
-                </div>
+
             @endif
         </div>
     </x-app-layout>

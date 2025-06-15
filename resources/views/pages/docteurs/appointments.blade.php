@@ -398,7 +398,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="appointment-status status-{{ $appointment->status }}">
+                                <div class="appointment-status status-{{ str_replace(' ', '-', $appointment->status) }}">
                                     {{ ucfirst($appointment->status) }}
                                 </div>
                             </div>
@@ -446,83 +446,85 @@
                             @endif
                             
                             <div class="appointment-actions">
-                                <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST">
+                                <!-- Accepter -->
+                                <form action="{{ route('docteur.rendezvous.statut', $appointment->id) }}" method="POST" class="action-form">
                                     @csrf
                                     @method('PUT')
-                                    <input type="hidden" name="status" value="confirmé">
-                                    <button type="submit" class="action-btn confirm-btn" {{ $appointment->status == 'confirmé' ? 'disabled' : '' }}>
-                                        <i class="fas fa-check"></i> Confirmer
+                                    <input type="hidden" name="status" value="accepté">
+                                    <button type="submit" 
+                                            class="action-btn accept-btn"
+                                            title="Accepter le rendez-vous"
+                                            {{ $appointment->status == 'accepté' ? 'disabled' : '' }}
+                                            onclick="return confirm('Confirmer l\\'acceptation de ce rendez-vous?')">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Accepter</span>
                                     </button>
                                 </form>
-                                
-                                <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST">
+
+                                <!-- En attente -->
+                                <form action="{{ route('docteur.rendezvous.statut', $appointment->id) }}" method="POST" class="action-form">
                                     @csrf
                                     @method('PUT')
-                                    <input type="hidden" name="status" value="annulé">
-                                    <button type="submit" class="action-btn cancel-btn" {{ $appointment->status == 'annulé' ? 'disabled' : '' }}>
-                                        <i class="fas fa-times"></i> Annuler
+                                    <input type="hidden" name="status" value="en attente">
+                                    <button type="submit" 
+                                            class="action-btn pending-btn"
+                                            title="Mettre en attente"
+                                            {{ $appointment->status == 'en attente' ? 'disabled' : '' }}
+                                            onclick="return confirm('Mettre ce rendez-vous en attente?')">
+                                        <i class="fas fa-clock"></i>
+                                        <span>En attente</span>
                                     </button>
                                 </form>
+
+                                <!-- Refuser -->
+                                <form action="{{ route('docteur.rendezvous.statut', $appointment->id) }}" method="POST" class="action-form" id="refuse-form-{{ $appointment->id }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="refusé">
+                                    <div class="reason-field" style="display: none;">
+                                        <textarea name="reason" class="form-control mt-2" 
+                                                placeholder="Raison du refus (optionnel)"></textarea>
+                                        <button type="submit" class="btn btn-danger mt-2">
+                                            Confirmer le refus
+                                        </button>
+                                    </div>
+                                    <button type="button" 
+                                            class="action-btn refuse-btn"
+                                            title="Refuser le rendez-vous"
+                                            {{ $appointment->status == 'refusé' ? 'disabled' : '' }}
+                                            onclick="showReasonField({{ $appointment->id }})">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span>Refuser</span>
+                                    </button>
+                                </form>
+                                <a href="{{ route('docteur.rendezvous.gerer', $appointment->id) }}" class="action-btn edit-btn">
+    <i class="fas fa-edit"></i> Gérer
+</a>
+
                                 
-                                <a href="{{ route('doctor.appointments.manage', $appointment->id) }}" class="action-btn edit-btn">
-                                    <i class="fas fa-edit"></i> Gérer
-                                </a>
+                               
                             </div>
-<div class="appointment-actions">
-    <!-- Accepter -->
-    <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST" class="action-form">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="status" value="accepté">
-        <button type="submit" 
-                class="action-btn accept-btn"
-                title="Accepter le rendez-vous"
-                {{ $appointment->status == 'accepté' ? 'disabled' : '' }}
-                onclick="return confirm('Confirmer l\\'acceptation de ce rendez-vous?')">
-            <i class="fas fa-check-circle"></i>
-            <span>Accepter</span>
-        </button>
-    </form>
-
-    <!-- En attente -->
-    <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST" class="action-form">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="status" value="en attente">
-        <button type="submit" 
-                class="action-btn pending-btn"
-                title="Mettre en attente"
-                {{ $appointment->status == 'en attente' ? 'disabled' : '' }}
-                onclick="return confirm('Mettre ce rendez-vous en attente?')">
-            <i class="fas fa-clock"></i>
-            <span>En attente</span>
-        </button>
-    </form>
-
-    <!-- Refuser -->
-    <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST" class="action-form" id="refuse-form-{{ $appointment->id }}">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="status" value="refusé">
-        <div class="reason-field" style="display: none;">
-            <textarea name="reason" class="form-control mt-2" 
-                      placeholder="Raison du refus (optionnel)"></textarea>
-        </div>
-        <button type="button" 
-                class="action-btn refuse-btn"
-                title="Refuser le rendez-vous"
-                {{ $appointment->status == 'refusé' ? 'disabled' : '' }}
-                onclick="showReasonField({{ $appointment->id }})">
-            <i class="fas fa-times-circle"></i>
-            <span>Refuser</span>
-        </button>
-    </form>
-</div>
                         </div>
                     @endforeach
                 </div>
             @endif
         </div>
+
+        <script>
+            function showReasonField(appointmentId) {
+                const form = document.getElementById(`refuse-form-${appointmentId}`);
+                const reasonField = form.querySelector('.reason-field');
+                const refuseBtn = form.querySelector('.refuse-btn');
+                
+                if (reasonField.style.display === 'none') {
+                    reasonField.style.display = 'block';
+                    refuseBtn.style.display = 'none';
+                } else {
+                    reasonField.style.display = 'none';
+                    refuseBtn.style.display = 'block';
+                }
+            }
+        </script>
     </x-app-layout>
 </body>
 </html>

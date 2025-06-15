@@ -1160,7 +1160,7 @@
                     <i class="fas fa-home"></i>
                     <span>Tableau de bord</span>
                 </a>
-                <a href="{{ route('docteur.rendezvous.index') }}" class="nav-item {{ request()->routeIs('docteur.rendezvous.index') ? 'active' : '' }}">
+                <a href="{{ route('docteur.rendezvous.index') }}" class="nav-item {{ request()->routeIs('docteur.appointments.index') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check"></i>
                     <span>Mes rendez-vous</span>
                 </a>

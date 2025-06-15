@@ -81,18 +81,19 @@ Route::middleware(['auth'])->prefix('patient')->controller(PatientController::cl
 
 // Routes pour les médecins
 Route::middleware(['auth', 'verified'])->prefix('docteur')->name('docteur.')->group(function () {
-    // Tableau de bord
-    Route::get('/dashboard', [DoctorController::class, 'dashboard'])->name('dashboard');
+    Route::prefix('rendezvous')
+            ->name('rendezvous.')
+            ->group(function() {
+                Route::get('/', [DoctorController::class, 'appointments'])->name('index');
+                Route::get('/gerer/{id}', [DoctorController::class, 'manageAppointment'])->name('gerer');
+                Route::put('/statut/{id}', [DoctorController::class, 'updateAppointmentStatus'])->name('statut'); // Changé de 'update-status' à 'statut'
+            });
     
-    // Gestion des rendez-vous
-    Route::prefix('rendezvous')->name('rendezvous.')->group(function () {
-        Route::get('/', [DoctorController::class, 'appointments'])->name('index');
-        Route::get('/gerer/{id}', [DoctorController::class, 'manageAppointment'])->name('gerer');
-        Route::put('/statut/{id}', [DoctorController::class, 'updateAppointmentStatus'])->name('statut');
-    });
-    Route::get('/prescription', [DoctorController::class, 'listPrescriptions'])->name('prescription');
-     
-    
+
+        Route::get('/dashboard', [DoctorController::class, 'dashboard'])->name('dashboard');
+
+
+Route::get('/prescription', [DoctorController::class, 'listPrescriptions'])->name('prescription');
     // Gestion des patients
     Route::get('/patients', [DoctorController::class, 'myPatients'])->name('patients');
     
@@ -119,6 +120,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/conseil', [MessageController::class, 'store'])->name('message.store');
 });
 Route::middleware(['auth'])->group(function () {
+    Route::get('/docteurs/prescription', [PrescriptionController::class, 'index'])->name('pages.docteurs.prescription');
     Route::get('/prescriptions/create', [PrescriptionController::class, 'create'])->name('prescriptions.create');
     Route::post('/prescriptions', [PrescriptionController::class, 'store'])->name('prescriptions.store');
 });

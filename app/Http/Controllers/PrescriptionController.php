@@ -15,6 +15,14 @@ class PrescriptionController extends Controller
         $patients = User::where('role', 'patient')->get();
         return view('pages.docteurs.create_prescription', compact('patients'));
     }
+    public function index()
+{
+    // Récupérer toutes les prescriptions (exemple)
+    $prescriptions = Prescription::all(); // Assurez-vous d'importer le modèle (`use App\Models\Prescription;`)
+    
+    // Retourner la vue avec les données
+    return view('pages.docteurs.prescription', compact('prescriptions'));
+}
 
     public function store(Request $request)
     {
@@ -55,8 +63,6 @@ class PrescriptionController extends Controller
             'signature_path' => 'signatures/'.$signatureName,
         ]);
 
-        return redirect()
-            ->route('pages.docteurs.prescription')
-            ->with('success', 'Ordonnance créée avec succès.');
+        return redirect()->route('pages.docteurs.prescription')->with('success', 'Prescription créée avec succès !');
     }
 }
