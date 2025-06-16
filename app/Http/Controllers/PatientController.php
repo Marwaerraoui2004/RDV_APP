@@ -60,7 +60,7 @@ class PatientController extends Controller{
     ->orderBy('appointment_datetime')
     ->take(5)
     ->get();
-     $mesMedecins = User::whereHas('doctorAppointments', function ($query) use ($userId) {
+     $mesMedecins = User::whereHas('appointmentsReceived', function ($query) use ($userId) {
         $query->where('patient_id', $userId);
         })->get();
 
@@ -90,15 +90,17 @@ class PatientController extends Controller{
 
         return view('patients.appointments', compact('appointments'));
     }
-    public function create()
+   public function create(Request $request)
     {
+        $selectedDoctorId = $request->input('doctor_id');
+        
         $doctors = User::where('role', 'doctor')
-            ->select('id', 'name', 'specialty')
-            ->withAvg('reviewsReceived', 'rating') // Laravel 9+ uniquement
-            ->get();
+                    ->withAvg('reviewsReceived', 'rating')
+                    ->get();
 
-        return view('patients.create_appointment', compact('doctors'));
-    }    
+        return view('patients.create_appointment', compact('doctors', 'selectedDoctorId'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -122,21 +124,41 @@ class PatientController extends Controller{
 
     // 3. Mes médecins
     public function mydoctors()
-    {
-        return view('patients.doctors');
-    }
+        {
+            $patientId = auth()->id();
+
+            // Récupère tous les docteurs avec qui le patient a déjà eu un rendez-vous
+            $doctors = User::whereHas('appointmentsReceived', function ($query) use ($patientId) {
+                $query->where('patient_id', $patientId);
+            })->withAvg('reviewsReceived', 'rating')->get();
+
+            return view('patients.doctors', compact('doctors'));
+        }
 
     // 4. Mes documents
-    public function myDocuments()
+   public function myDocuments()
     {
-        return view('patients.documents');
+        $documents = Document::where('patient_id', Auth::id())
+            ->with('doctor') // Assure-toi que la relation doctor() existe dans le modèle Document
+            ->latest()
+            ->get();
+
+        return view('patients.documents', compact('documents'));
     }
 
     // 5. Mes ordonnances
     public function prescriptions()
-    {
-        return view('patients.prescriptions');
-    }
+{
+    $patientId = auth()->id(); // ou Auth::user()->id;
+
+    $prescriptions = \App\Models\Prescription::where('patient_id', $patientId)
+        ->with('doctor') // pour afficher le nom du docteur
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('patients.prescriptions', compact('prescriptions'));
+}
+
 
     // 6. Ma santé
     public function health()

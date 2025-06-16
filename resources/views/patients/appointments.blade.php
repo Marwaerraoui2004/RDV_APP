@@ -310,23 +310,45 @@
             .appointment-details {
                 grid-template-columns: 1fr;
             }
+           
+
         }
+         .return-link {
+                display: inline-flex;
+                align-items: center;
+                font-size: 14px;
+                color: #2563eb; /* bleu */
+                text-decoration: none;
+                font-weight: 500;
+                gap: 0.4rem;
+                transition: color 0.2s;
+            }
+
+            .return-link:hover {
+                color: #1e40af; /* bleu foncé */
+            }
     </style>
 </head>
 <body>
+     
     <x-app-layout>
+       
         <x-slot name="header">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
                 Mes rendez-vous
             </h2>
         </x-slot>
-
+       
         <div class="appointments-container">
             <div class="floating-elements">
                 <div class="floating-element element-1"></div>
                 <div class="floating-element element-2"></div>
             </div>
-            
+             <div style="margin-bottom: 1rem;">
+            <a href="{{ route('patient.dashboard') }}" class="return-link">
+                <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+            </a>
+            </div>
             <div class="appointments-header">
                 <h2>
                     <i class="fas fa-calendar-check"></i>
@@ -357,7 +379,8 @@
                                     </div>
                                     <div class="doctor-details">
                                         <h3>Dr. {{ $appointment->doctor->name ?? 'N/A' }}</h3>
-                                        <p>{{ $appointment->doctor->speciality ?? 'Spécialité non précisée' }}</p>
+                                        <p>{{ $appointment->doctor->specialty ?? 'Spécialité non précisée' }}</p>
+                                        <p>{{ $appointment->doctor->city ?? 'city non précisée' }}</p>
                                     </div>
                                 </div>
                                 <div class="appointment-status status-{{ $appointment->status }}">

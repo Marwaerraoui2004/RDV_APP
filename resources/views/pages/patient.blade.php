@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
     <style>
         :root {
             --primary: #3a86ff;
@@ -1208,7 +1209,7 @@
                                         <div class="doctor-avatar">{{ strtoupper(substr($medecin->name, 0, 1)) }}{{ strtoupper(substr(Str::after($medecin->name, ' '), 0, 1)) }}</div>
                                         <div class="doctor-info">
                                             <h4>Dr. {{ $medecin->name }}</h4>
-                                            <p><i class="fas fa-heartbeat"></i> {{ $medecin->speciality ?? 'Spécialité inconnue' }}</p>
+                                            <p><i class="fas fa-heartbeat"></i> {{ $medecin->specialty ?? 'Spécialité inconnue' }}</p>
                                         </div>
                                         <a href="{{ route('patient.contact', $medecin->id) }}" class="doctor-action">Contacter</a>
                                     </li>

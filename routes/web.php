@@ -56,7 +56,7 @@ require __DIR__.'/auth.php';
 use App\Http\Controllers\PatientController;
 
 Route::middleware(['auth'])->prefix('patient')->controller(PatientController::class)->group(function () {
-    Route::get('/dashboard', 'dashboard')->name('patient.dashboard')->middleware(['auth', 'verified']);
+    Route::get('/dashboard', 'dashboard')->name('patient.dashboard');
 
     Route::get('/rendez-vous', 'appointments')->name('patient.appointments');
     Route::get('/rendez-vous/create', 'create')->name('patient.appointments.create');

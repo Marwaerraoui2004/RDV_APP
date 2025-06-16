@@ -365,9 +365,7 @@
                                         <div class="doctor-info">
                                             <span class="doctor-name">Dr. {{ $doctor->name }}</span>
                                             <span class="doctor-speciality">{{ $doctor->specialty ?? 'N/A' }}</span>
-                                        </div>
-                                        <div class="doctor-rating">
-                                            <i class="fas fa-star"></i> {{ number_format($doctor->reviews_received_avg_rating ?? 0, 1) }}/5
+                                            <span class="doctor-speciality">{{ $doctor->city}}</span>
                                         </div>
                                     </div>
                                 </option>

@@ -25,7 +25,6 @@ class PrescriptionController extends Controller
             'dosage' => 'required|string|max:100',
             'frequency' => 'required|string|max:100',
             'duration' => 'required|string|max:100',
-            'notes' => 'nullable|string',
             'signature' => 'required|string',
         ]);
 
@@ -53,7 +52,6 @@ class PrescriptionController extends Controller
             'dosage' => $validatedData['dosage'],
             'frequency' => $validatedData['frequency'],
             'duration' => $validatedData['duration'],
-            'notes' => $validatedData['notes'],
             'signature_path' => 'signatures/'.$signatureName,
         ]);
 

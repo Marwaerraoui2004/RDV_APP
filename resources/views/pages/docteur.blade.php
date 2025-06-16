@@ -766,6 +766,30 @@
             flex-direction: column;
             gap: 1rem;
         }
+        .scrollable-container {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .scrollable-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollable-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.03);
+            border-radius: 3px;
+        }
+        
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background: rgba(58, 134, 255, 0.4);
+            border-radius: 3px;
+        }
+        
+        .scrollable-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
 
         .action-btn {
             padding: 1rem;
@@ -887,6 +911,234 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .doctor-action {
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            outline: none;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .doctor-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(131, 56, 236, 0.25);
+        }
+        .doctor-list {
+            list-style: none;
+            padding: 0 0.5rem;
+        }
+        .doctor-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .doctor-item:hover {
+            background: rgba(58, 134, 255, 0.03);
+        }
+
+        .doctor-item:last-child {
+            border-bottom: none;
+        }
+
+        .doctor-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .doctor-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .doctor-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .doctor-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .doctor-info p i {
+            margin-right: 6px;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .doctor-action {
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            outline: none;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .doctor-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(131, 56, 236, 0.25);
+        }
+        .health-indicators {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .indicator-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .indicator-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .indicator-title {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+        }
+
+        .indicator-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .indicator-range {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.6rem;
+        }
+
+        .indicator-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .indicator-info {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .appointment-list {
+            list-style: none;
+            padding: 0 0.5rem;
+        }
+        .appointment-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .appointment-item:hover {
+            background: rgba(58, 134, 255, 0.03);
+        }
+
+        .appointment-item:last-child {
+            border-bottom: none;
+        }
+
+        .appointment-time {
+            background: rgba(58, 134, 255, 0.08);
+            border-radius: 10px;
+            padding: 0.8rem;
+            text-align: center;
+            min-width: 90px;
+            margin-right: 1.2rem;
+        }
+
+        .appointment-time .time {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .appointment-time .date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .appointment-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-dark);
+        }
+
+        .appointment-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .appointment-info p i {
+            margin-right: 6px;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .appointment-status {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-confirmed {
+            background: rgba(56, 182, 161, 0.12);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(236, 201, 75, 0.12);
+            color: var(--warning);
+        }
+
     </style>
 </head>
 <body>
@@ -961,7 +1213,7 @@
                     <div class="user-profile-container">
                         <div class="user-profile" onclick="toggleDropdown()">
                             <div class="user-avatar">
-                                Dr. {{ substr(Auth::user()->name, 0, 1) }}{{ substr(Str::after(Auth::user()->name, ' '), 0, 1) }}
+                                {{ substr(Auth::user()->name, 0, 1) }}{{ substr(Auth::user()->name, strpos(Auth::user()->name, ' ') + 1, 1) }}
                             </div>
                             <div class="user-info">
                                 <h4>Dr. {{Auth::user()->name}}</h4>
@@ -1115,7 +1367,6 @@
                                         </div>
                                         <div class="doctor-info">
                                             <h4>{{ $patient->name }}</h4>
-                                            <p><i class="fas fa-birthday-cake"></i> {{ $patient->age }} ans</p>
                                             <p><i class="fas fa-phone"></i> {{ $patient->phone ?? 'Non renseigné' }}</p>
                                         </div>
                                         <a href="{{ route('docteur.messagerie') }}?patient_id={{ $patient->id }}" class="doctor-action">Contacter</a>
@@ -1299,6 +1550,67 @@
             const menu = document.getElementById('dropdownMenu');
             menu.classList.toggle('show');
         }
+        const calendarTitle = document.querySelector('.calendar-title');
+    const calendarGrid = document.querySelector('.calendar-grid');
+    const prevBtn = document.querySelector('.calendar-nav button:first-child');
+    const nextBtn = document.querySelector('.calendar-nav button:last-child');
+
+    let currentDate = new Date();
+
+    function renderCalendar(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+        // Met à jour le titre du mois
+        calendarTitle.textContent = `${monthNames[month]} ${year}`;
+
+        // Supprime les anciens jours sauf les noms des jours
+        const allDates = calendarGrid.querySelectorAll('.calendar-date');
+        allDates.forEach(d => d.remove());
+
+        const firstDay = new Date(year, month, 1).getDay(); // 0=dimanche
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const startIndex = (firstDay + 6) % 7; // pour commencer à Lundi
+
+        for (let i = 0; i < startIndex; i++) {
+            const empty = document.createElement('div');
+            empty.classList.add('calendar-date');
+            calendarGrid.appendChild(empty);
+        }
+
+        const today = new Date();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateElement = document.createElement('div');
+            dateElement.classList.add('calendar-date');
+            dateElement.textContent = day;
+
+            // Ajoute une classe "today" si c’est aujourd’hui
+            if (
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+            ) {
+                dateElement.classList.add('today');
+            }
+
+            calendarGrid.appendChild(dateElement);
+        }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate);
+        });
+
+        renderCalendar(currentDate);
 
         // Fermer le dropdown si on clique ailleurs
         window.onclick = function(event) {

@@ -296,10 +296,6 @@
                     <input type="text" name="duration" id="duration" class="form-control" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="notes" class="form-label">Notes</label>
-                    <textarea name="notes" id="notes" class="form-control"></textarea>
-                </div>
 
                 <div class="signature-container">
                     <label class="signature-label">
