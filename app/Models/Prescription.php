@@ -25,6 +25,7 @@ class Prescription extends Model
         'frequency',
         'duration',
         'notes',
+        'signature_path'
     ];
 
     /**

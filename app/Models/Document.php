@@ -20,20 +20,18 @@ class Document extends Model
     ];
 
     // Relation avec le patient
-    public function patient()
-    {
-        return $this->belongsTo(User::class, 'patient_id')->withDefault([
-            'name' => 'Patient inconnu'
-        ]);
-    }
+    // Un patient a plusieurs docteurs
+public function doctors()
+{
+    return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')->withTimestamps();
+}
 
-    // Relation avec le médecin
-    public function doctor()
-    {
-        return $this->belongsTo(User::class, 'doctor_id')->withDefault([
-            'name' => 'Médecin inconnu'
-        ]);
-    }
+// Un docteur a plusieurs patients
+public function patients()
+{
+    return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id')->withTimestamps();
+}
+
 
     // Optionnel : Accessor pour le type de document
     public function getTypeAttribute($value)

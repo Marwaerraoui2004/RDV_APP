@@ -42,10 +42,18 @@ class DoctorController extends Controller
         $lastPatient = User::whereIn('id', $patientIds)->latest()->first()?->name;
 
         $lastAppointment = Appointment::with('patient') // Chargement anticipé de la relation
-    ->where('doctor_id', $user->id)
-    ->whereDate('appointment_datetime', '<', $today)
-    ->orderBy('appointment_datetime', 'desc')
-    ->first();
+        ->where('doctor_id', $user->id)
+        ->whereDate('appointment_datetime', '<', $today)
+        ->orderBy('appointment_datetime', 'desc')
+        ->first();
+        $patients = User::whereHas('patientAppointments', function ($query) use ($userId) {
+            $query->where('doctor_id', $userId);
+        })
+        ->with(['patientAppointments' => function ($q) use ($today) {
+            $q->orderBy('appointment_datetime', 'desc');
+        }])
+        ->get();
+
 
 $daysSinceLast = $lastAppointment
     ? Carbon::parse($lastAppointment->appointment_datetime)->diffInDays($today)
@@ -90,7 +98,7 @@ $daysSinceLast = $lastAppointment
             'lastDocDate',
             'nextAppointmentsList',
             'mesPatients',
-            'documents'
+            'documents',
         ));
     }
 
@@ -142,14 +150,17 @@ public function manageAppointment(Request $request)
 }
 
     // 5. Mes patients
-    public function myPatients()
-    {
-        $patients = User::whereHas('patientAppointments', function ($query) {
-            $query->where('doctor_id', Auth::id());
-        })->get();
+   public function myPatients()
+{   
+    $patients = User::whereHas('patientAppointments', function ($query) {
+        $query->where('doctor_id', Auth::id());
+    })
+    ->with(['patientAppointments']) // ⚠️ Ajout essentiel
+    ->get();
 
-        return view('pages.docteurs.patients', compact('patients'));
-    }
+    return view('pages.docteurs.patients', compact('patients'));
+}
+
 
     
     // 8. Voir les documents créés

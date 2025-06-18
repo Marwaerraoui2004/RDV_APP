@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: {
+            themea: {
                 extend: {
                     colors: {
                         primary: '#3a86ff',
@@ -305,7 +305,7 @@
                         <div class="card-body">
                             <div class="specialty">
                                 <i class="fas fa-stethoscope"></i>
-                                <span>Spécialité : {{ $doctor->speciality ?? 'Non renseignée' }}</span>
+                                <span>Spécialité : {{ $doctor->specialty ?? 'Non renseignée' }}</span>
                             </div>
                             
                             <div class="rating">

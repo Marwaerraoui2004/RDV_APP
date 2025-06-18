@@ -82,10 +82,13 @@ class PatientController extends Controller{
 
     // 2. Mes rendez-vous
    public function appointments()
+   
     {
+            $today = Carbon::today();
+
         $appointments = Appointment::where('patient_id', Auth::id())
-            ->orderBy('appointment_datetime', 'desc')  // Attention : selon ta migration, tu as date ET heure séparés
-            ->orderBy('appointment_datetime', 'desc')
+            ->whereDate('appointment_datetime', '>=', $today)
+            ->orderBy('appointment_datetime')            ->orderBy('appointment_datetime', 'desc')
             ->get();
 
         return view('patients.appointments', compact('appointments'));
@@ -206,5 +209,14 @@ public function contact()
 {
     return view('patient.contact'); // ou la vue que tu souhaites afficher
 }
+public function cancel($id)
+{
+    $appointment = Appointment::findOrFail($id);
+    $appointment->status = 'refusé'; // ou 'annulée' si tu préfères
+    $appointment->save();
+
+    return redirect()->back()->with('success', 'Le rendez-vous a été annulé.');
+}
+
 
 }

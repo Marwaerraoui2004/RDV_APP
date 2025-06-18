@@ -1286,7 +1286,7 @@
                         </div>
                     </div>
                     <div class="stat-value">
-                        {{ $daysSinceLast !== null ? $daysSinceLast . ' jours' : 'Aucune' }}
+                       Aucune
                     </div>
                     <div class="stat-change">
                         <i class="fas fa-calendar-check"></i> {{ $lastAppointment ? 'Avec ' . optional($lastAppointment->patient)->name : '' }}
@@ -1334,12 +1334,10 @@
                                         </div>
                                         <div class="appointment-info">
                                             <h4>{{ optional($appointment->patient)->name ?? 'Patient inconnu' }}</h4>
-                                            <p><i class="fas fa-info-circle"></i> {{ $appointment->notes ? Str::limit($appointment->notes, 30) : 'Aucune note' }}</p>
                                             <span class="appointment-status status-{{ $appointment->status }}">
                                                 {{ ucfirst($appointment->status) }}
                                             </span>
                                         </div>
-                                        <a href="{{ route('docteur.rendezvous.gerer', $appointment->id) }}" class="doctor-action">Gérer</a>
                                     </li>
                                     @empty
                                         <li class="appointment-item">

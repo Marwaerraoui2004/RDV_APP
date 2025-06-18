@@ -1215,7 +1215,7 @@
             <h2>Prêt à prendre le contrôle de votre santé ?</h2>
             <p>Rejoignez des milliers de patients et professionnels de santé qui utilisent déjà MediConnect</p>
             <div class="hero-buttons">
-                <button class="btn btn-register btn-large">Créer un compte</button>
+                <button class="btn btn-register btn-large"><a href="{{route('register.create')}}" style="text-decoration:none;">Créer un compte</a></button>
                 <button class="btn btn-login btn-large">En savoir plus</button>
             </div>
         </div>

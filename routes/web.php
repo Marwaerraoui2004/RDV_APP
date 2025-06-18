@@ -74,7 +74,10 @@ Route::middleware(['auth'])->prefix('patient')->controller(PatientController::cl
     Route::get('/parametres', 'settings')->name('patient.settings');
 
     Route::get('/recherche',  'recherche')->name('patient.recherche');
-    
+    Route::put('/appointments/{id}/cancel', 'cancel')->name('appointments.cancel');
+
+    Route::get('/patient/rendezvous/{id}/annuler',  'cancel')->name('appointment.cancel');
+
 
 
 });

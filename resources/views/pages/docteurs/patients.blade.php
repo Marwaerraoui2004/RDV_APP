@@ -6,14 +6,43 @@
     <title>Mes Patients - MediConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2667cc',
+                        primaryLight: '#e6f0ff',
+                        primaryDark: '#1a4d99',
+                        accent: '#457b9d',
+                        success: '#38b000',
+                        warning: '#ecc94b',
+                        danger: '#e53e3e',
+                        textDark: '#2d3748',
+                        textLight: '#718096',
+                        bgLight: '#f8f9fa',
+                        bgCard: '#ffffff',
+                    },
+                    borderRadius: {
+                        custom: '16px',
+                    },
+                    boxShadow: {
+                        custom: '0 15px 30px rgba(0,0,0,0.1)',
+                        customDark: '0 15px 30px rgba(0,0,0,0.25)',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         :root {
-            --primary: #2667cc; /* Bleu plus foncé pour médecin */
+            --primary: #2667cc;
             --primary-light: #e6f0ff;
             --primary-dark: #1a4d99;
-            --accent: #457b9d; /* Bleu différent */
+            --accent: #457b9d;
             --success: #38b000;
             --warning: #ecc94b;
             --danger: #e53e3e;
@@ -23,24 +52,43 @@
             --bg-card: #ffffff;
             --border-radius: 16px;
             --shadow: 0 15px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
         }
         
+        .dark {
+            --primary: #5da8ff;
+            --primary-light: #2a4365;
+            --primary-dark: #3a86ff;
+            --accent: #83a3ec;
+            --text-dark: #e2e8f0;
+            --text-light: #a0aec0;
+            --bg-light: #1a202c;
+            --bg-card: #2d3748;
+            --shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
             color: var(--text-dark);
             min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        body.dark {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
         
         .patients-container {
             max-width: 1000px;
             margin: 40px auto;
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             position: relative;
             padding: 40px;
+            transition: var(--transition);
         }
         
         .patients-header {
@@ -52,17 +100,19 @@
         .patients-header h2 {
             font-size: 2.4rem;
             font-weight: 700;
-            color: #2c5282;
+            color: var(--primary-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
+            transition: var(--transition);
         }
         
         .patients-header h2 i {
             color: var(--primary);
             font-size: 2rem;
+            transition: var(--transition);
         }
         
         .patients-subtitle {
@@ -71,6 +121,7 @@
             max-width: 500px;
             margin: 0 auto;
             line-height: 1.6;
+            transition: var(--transition);
         }
         
         .empty-state {
@@ -79,18 +130,21 @@
             background: var(--bg-light);
             border-radius: var(--border-radius);
             margin: 20px 0;
+            transition: var(--transition);
         }
         
         .empty-state i {
             font-size: 4rem;
             color: var(--primary-light);
             margin-bottom: 20px;
+            transition: var(--transition);
         }
         
         .empty-state h3 {
             font-size: 1.8rem;
             color: var(--text-dark);
             margin-bottom: 15px;
+            transition: var(--transition);
         }
         
         .empty-state p {
@@ -99,23 +153,30 @@
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
+            transition: var(--transition);
         }
         
         .patient-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             padding: 25px;
             margin-bottom: 25px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border-left: 4px solid var(--primary);
             position: relative;
             overflow: hidden;
+        }
+        .dark .patient-card {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
         
         .patient-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(39, 103, 204, 0.2);
+        }
+        .dark .patient-card:hover {
+            box-shadow: 0 12px 30px rgba(39, 103, 204, 0.4);
         }
         
         .patient-header {
@@ -124,7 +185,10 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .dark .patient-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .patient-main-info {
@@ -144,17 +208,21 @@
             color: white;
             font-weight: 600;
             font-size: 1.5rem;
+            transition: var(--transition);
         }
         
         .patient-details h3 {
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-dark);
+            transition: var(--transition);
         }
         
         .patient-details p {
             color: var(--text-light);
             font-size: 0.95rem;
+            transition: var(--transition);
         }
         
         .patient-stats {
@@ -180,18 +248,21 @@
             justify-content: center;
             color: var(--primary);
             font-size: 1.2rem;
+            transition: var(--transition);
         }
         
         .stat-content h4 {
             font-size: 0.95rem;
             color: var(--text-light);
             margin-bottom: 3px;
+            transition: var(--transition);
         }
         
         .stat-content p {
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-dark);
+            transition: var(--transition);
         }
         
         .patient-actions {
@@ -206,25 +277,20 @@
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
+            border: none;
+            cursor: pointer;
         }
         
         .view-btn {
             background: var(--primary);
             color: white;
         }
-        
-        .message-btn {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .history-btn {
-            background: var(--success);
-            color: white;
+        .view-btn:hover {
+            background: var(--primary-dark);
         }
         
         .floating-elements {
@@ -243,6 +309,7 @@
             border-radius: 50%;
             filter: blur(70px);
             opacity: 0.1;
+            transition: var(--transition);
         }
         
         .element-1 {
@@ -259,6 +326,36 @@
             background: var(--accent);
             bottom: -80px;
             left: -80px;
+        }
+        
+        /* Theme toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: var(--transition);
+        }
+        
+        .dark .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: rotate(20deg);
+        }
+        
+        .dark .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         
         /* Responsive */
@@ -303,7 +400,7 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 dark:bg-gray-900">
     <x-app-layout>
         <x-slot name="header">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
@@ -322,6 +419,9 @@
                     <i class="fas fa-user-injured"></i>
                     Mes Patients
                 </h2>
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </div>
                 <p class="patients-subtitle">
                     Consultez et gérez les dossiers de vos patients
                 </p>
@@ -345,8 +445,6 @@
                                     <div class="patient-details">
                                         <h3>{{ $patient->name ?? 'N/A' }}</h3>
                                         <p>
-                                            {{ $patient->age ?? 'N/A' }} ans • 
-                                            {{ $patient->gender ?? 'Non spécifié' }} •
                                             {{ $patient->phone ?? 'Tél. non renseigné' }}
                                         </p>
                                     </div>
@@ -360,8 +458,20 @@
                                     </div>
                                     <div class="stat-content">
                                         <h4>Dernier RDV</h4>
-                                        <p>{{ $patient->last_appointment ? \Carbon\Carbon::parse($patient->last_appointment)->translatedFormat('d M Y') : 'Jamais' }}</p>
-                                    </div>
+
+ @php
+                                           $appointments = $patient->patientAppointments ?? collect(); // Si null, on met une collection vide
+
+                                            $lastAppointment = $appointments
+                                                ->where('appointment_datetime', '<', now())
+                                                ->sortByDesc('appointment_datetime')
+                                                ->first();
+                                        @endphp
+
+                                        @foreach($patient->patientAppointments as $app)
+                                            <p>{{ $app->appointment_datetime }}</p>
+                                        @endforeach
+                                     </div>
                                 </div>
                                 
                                 <div class="stat-item">
@@ -386,16 +496,8 @@
                             </div>
                             
                             <div class="patient-actions">
-                                <a href="{{ route('doctor.patients.view', $patient->id) }}" class="action-btn view-btn">
+                                <a href="{{ route('docteur.patients', $patient->id) }}" class="action-btn view-btn">
                                     <i class="fas fa-eye"></i> Dossier
-                                </a>
-                                
-                                <a href="{{ route('doctor.messaging.create', $patient->id) }}" class="action-btn message-btn">
-                                    <i class="fas fa-comment-medical"></i> Message
-                                </a>
-                                
-                                <a href="{{ route('doctor.patients.history', $patient->id) }}" class="action-btn history-btn">
-                                    <i class="fas fa-history"></i> Historique
                                 </a>
                             </div>
                         </div>
@@ -403,6 +505,35 @@
                 </div>
             @endif
         </div>
+
+        <script>
+            function toggleTheme() {
+                document.body.classList.toggle('dark');
+                const icon = document.getElementById('theme-icon');
+                
+                if (document.body.classList.contains('dark')) {
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+            
+            // Check for saved theme preference or use system preference
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                    document.body.classList.add('dark');
+                    document.getElementById('theme-icon').className = 'fas fa-sun';
+                }
+            }
+            
+            // Load theme on page load
+            document.addEventListener('DOMContentLoaded', loadTheme);
+        </script>
     </x-app-layout>
 </body>
 </html>

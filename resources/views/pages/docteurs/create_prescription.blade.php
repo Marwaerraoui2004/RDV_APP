@@ -6,6 +6,35 @@
     <title>Créer une ordonnance - MediConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2667cc',
+                        primaryLight: '#e6f0ff',
+                        primaryDark: '#1a4d99',
+                        accent: '#457b9d',
+                        success: '#38b000',
+                        warning: '#ecc94b',
+                        danger: '#e53e3e',
+                        textDark: '#2d3748',
+                        textLight: '#718096',
+                        bgLight: '#f8f9fa',
+                        bgCard: '#ffffff',
+                    },
+                    borderRadius: {
+                        custom: '16px',
+                    },
+                    boxShadow: {
+                        custom: '0 15px 30px rgba(0,0,0,0.1)',
+                        customDark: '0 15px 30px rgba(0,0,0,0.25)',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -23,24 +52,43 @@
             --bg-card: #ffffff;
             --border-radius: 16px;
             --shadow: 0 15px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
         }
         
+        .dark {
+            --primary: #5da8ff;
+            --primary-light: #2a4365;
+            --primary-dark: #3a86ff;
+            --accent: #83a3ec;
+            --text-dark: #e2e8f0;
+            --text-light: #a0aec0;
+            --bg-light: #1a202c;
+            --bg-card: #2d3748;
+            --shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
             color: var(--text-dark);
             min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        body.dark {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
         
         .prescription-container {
             max-width: 900px;
             margin: 40px auto;
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             position: relative;
             padding: 40px;
+            transition: var(--transition);
         }
         
         .prescription-header {
@@ -52,17 +100,19 @@
         .prescription-header h2 {
             font-size: 2.4rem;
             font-weight: 700;
-            color: #2c5282;
+            color: var(--primary-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
+            transition: var(--transition);
         }
         
         .prescription-header h2 i {
             color: var(--primary);
             font-size: 2rem;
+            transition: var(--transition);
         }
         
         .form-group {
@@ -74,24 +124,30 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--text-dark);
+            transition: var(--transition);
         }
         
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             font-family: 'Poppins', sans-serif;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background-color: #f8fafc;
+            transition: var(--transition);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .dark .form-control {
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-light);
-            background-color: white;
+            background-color: var(--bg-card);
         }
         
         textarea.form-control {
@@ -101,10 +157,15 @@
         
         .signature-container {
             margin-top: 20px;
-            border: 1px dashed #cbd5e0;
+            border: 1px dashed rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             padding: 20px;
-            background-color: #f8fafc;
+            background-color: var(--bg-light);
+            transition: var(--transition);
+        }
+        
+        .dark .signature-container {
+            border: 1px dashed rgba(255, 255, 255, 0.1);
         }
         
         .signature-label {
@@ -112,15 +173,20 @@
             margin-bottom: 15px;
             display: block;
             color: var(--text-dark);
+            transition: var(--transition);
         }
         
         #signature-pad {
-            background-color: white;
-            border: 1px solid #e2e8f0;
+            background-color: var(--bg-card);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 4px;
             cursor: crosshair;
             width: 100%;
             height: 150px;
+        }
+        
+        .dark #signature-pad {
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .signature-actions {
@@ -134,7 +200,7 @@
             border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -176,6 +242,7 @@
             border-radius: 8px;
             margin-bottom: 25px;
             border-left: 4px solid var(--success);
+            transition: var(--transition);
         }
         
         .floating-elements {
@@ -194,6 +261,7 @@
             border-radius: 50%;
             filter: blur(70px);
             opacity: 0.1;
+            transition: var(--transition);
         }
         
         .element-1 {
@@ -210,6 +278,36 @@
             background: var(--accent);
             bottom: -80px;
             left: -80px;
+        }
+        
+        /* Theme toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: var(--transition);
+        }
+        
+        .dark .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: rotate(20deg);
+        }
+        
+        .dark .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         
         /* Responsive */
@@ -234,7 +332,7 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 dark:bg-gray-900">
     <x-app-layout>
         <x-slot name="header">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
@@ -253,6 +351,9 @@
                     <i class="fas fa-prescription-bottle-alt"></i>
                     Nouvelle ordonnance
                 </h2>
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </div>
             </div>
             
             @if(session('success'))
@@ -295,7 +396,6 @@
                     <label for="duration" class="form-label">Durée</label>
                     <input type="text" name="duration" id="duration" class="form-control" required>
                 </div>
-
 
                 <div class="signature-container">
                     <label class="signature-label">
@@ -354,6 +454,44 @@
             document.getElementById('signature').value = dataUrl;
             return true;
         }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            
+            if (document.body.classList.contains('dark')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+                // Update signature pad color for dark mode
+                signaturePad.penColor = 'rgb(255, 255, 255)';
+                signaturePad.backgroundColor = 'rgb(45, 55, 72)';
+                signaturePad.clear();
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+                // Update signature pad color for light mode
+                signaturePad.penColor = 'rgb(0, 0, 0)';
+                signaturePad.backgroundColor = 'rgb(255, 255, 255)';
+                signaturePad.clear();
+            }
+        }
+        
+        // Check for saved theme preference or use system preference
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.body.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+                signaturePad.penColor = 'rgb(255, 255, 255)';
+                signaturePad.backgroundColor = 'rgb(45, 55, 72)';
+                signaturePad.clear();
+            }
+        }
+        
+        // Load theme on page load
+        document.addEventListener('DOMContentLoaded', loadTheme);
     </script>
 </body>
 </html>

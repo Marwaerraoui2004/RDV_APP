@@ -60,7 +60,7 @@ public function handleGoogleCallback()
         // Redirection selon le rôle
         if ($user->role === 'patient') {
             return redirect()->route('patient.dashboard');
-        } elseif ($user->role === 'docteur') {
+        } elseif ($user->role === 'doctor') {
             return redirect()->route('docteur.dashboard');
         } else {
             return redirect('/home'); // ou une route par défaut

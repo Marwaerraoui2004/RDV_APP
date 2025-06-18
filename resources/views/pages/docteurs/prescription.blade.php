@@ -6,6 +6,24 @@
     <title>Liste des ordonnances - MediConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2667cc',
+                        primaryLight: '#e6f0ff',
+                        primaryDark: '#1a4d99',
+                        accent: '#457b9d',
+                        success: '#38b000',
+                        warning: '#ecc94b',
+                        danger: '#e53e3e'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -23,24 +41,43 @@
             --bg-card: #ffffff;
             --border-radius: 16px;
             --shadow: 0 15px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
         }
         
+        .dark {
+            --primary: #5da8ff;
+            --primary-light: #2a4365;
+            --primary-dark: #3a86ff;
+            --accent: #83a3ec;
+            --text-dark: #e2e8f0;
+            --text-light: #a0aec0;
+            --bg-light: #1a202c;
+            --bg-card: #2d3748;
+            --shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
             color: var(--text-dark);
             min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        body.dark {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
         }
         
         .prescriptions-container {
             max-width: 1000px;
             margin: 40px auto;
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             position: relative;
             padding: 40px;
+            transition: var(--transition);
         }
         
         .prescriptions-header {
@@ -52,7 +89,7 @@
         .prescriptions-header h2 {
             font-size: 2.4rem;
             font-weight: 700;
-            color: #2c5282;
+            color: var(--primary-dark);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -102,20 +139,26 @@
         }
         
         .prescription-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             padding: 25px;
             margin-bottom: 25px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border-left: 4px solid var(--primary);
-            position: relative;
-            overflow: hidden;
+        }
+        
+        .dark .prescription-card {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
         
         .prescription-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(39, 103, 204, 0.2);
+        }
+        
+        .dark .prescription-card:hover {
+            box-shadow: 0 12px 30px rgba(39, 103, 204, 0.4);
         }
         
         .prescription-header {
@@ -124,7 +167,11 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .prescription-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .patient-info {
@@ -150,6 +197,7 @@
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-dark);
         }
         
         .patient-details p {
@@ -200,7 +248,7 @@
         }
         
         .prescription-notes {
-            background: #f8fafc;
+            background: var(--bg-light);
             border-radius: 12px;
             padding: 15px;
             margin-top: 15px;
@@ -219,43 +267,6 @@
         .prescription-notes p {
             color: var(--text-dark);
             line-height: 1.6;
-        }
-        
-        .prescription-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-        
-        .action-btn {
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .view-btn {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .download-btn {
-            background: var(--success);
-            color: white;
-        }
-        
-        .create-btn {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .create-btn:hover {
-            background: #3a6a8a;
         }
         
         .floating-elements {
@@ -292,7 +303,35 @@
             left: -80px;
         }
         
-        /* Responsive */
+        .theme-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: var(--transition);
+        }
+        
+        .dark .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: rotate(20deg);
+        }
+        
+        .dark .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         @media (max-width: 768px) {
             .prescriptions-container {
                 padding: 30px;
@@ -306,11 +345,6 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
-            }
-            
-            .prescription-actions {
-                flex-direction: column;
-                gap: 10px;
             }
         }
         
@@ -334,7 +368,7 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 dark:bg-gray-900">
     <x-app-layout>
         <x-slot name="header">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
@@ -351,12 +385,14 @@
             <div class="prescriptions-header">
                 <h2>
                     <i class="fas fa-prescription-bottle-alt"></i>
-                    Mes ordonnances
+                    Ordonnances
                 </h2>
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </div>
                 <p class="prescriptions-subtitle">
-                    Consultez et gérez les ordonnances que vous avez créées
+                    Consultez les ordonnances que vous avez créées
                 </p>
-                
             </div>
             
             @if ($prescriptions->isEmpty())
@@ -380,7 +416,6 @@
                                     <div class="patient-details">
                                         <h3>{{ $prescription->patient->name ?? 'N/A' }}</h3>
                                         <p>
-                                            {{ $prescription->patient->age ?? 'N/A' }} ans • 
                                             {{ $prescription->patient->phone ?? 'Tél. non renseigné' }}
                                         </p>
                                     </div>
@@ -441,19 +476,38 @@
                                     <p>{{ $prescription->notes }}</p>
                                 </div>
                             @endif
-                            
-                            <div class="prescription-actions">
-                                
-                                
-                               
-                            </div>
                         </div>
                     @endforeach
                 </div>
-                
-
             @endif
         </div>
+
+        <script>
+            function toggleTheme() {
+                document.body.classList.toggle('dark');
+                const icon = document.getElementById('theme-icon');
+                
+                if (document.body.classList.contains('dark')) {
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+            
+            function loadTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                    document.body.classList.add('dark');
+                    document.getElementById('theme-icon').className = 'fas fa-sun';
+                }
+            }
+            
+            document.addEventListener('DOMContentLoaded', loadTheme);
+        </script>
     </x-app-layout>
 </body>
 </html>

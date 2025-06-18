@@ -57,16 +57,18 @@ class User extends Authenticatable
         {
             return $this->hasMany(Prescription::class, 'patient_id');
         }
-    public function doctors()
+   // Un patient a plusieurs docteurs
+public function doctors()
 {
-    return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')
-                ->withTimestamps();
+    return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')->withTimestamps();
 }
- public function patients()
+
+// Un docteur a plusieurs patients
+public function patients()
 {
-    return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id')
-                ->withTimestamps();
+    return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id')->withTimestamps();
 }
+
     public function documents()
     {
         return $this->hasMany(Document::class, 'patient_id');
